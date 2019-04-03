@@ -6,9 +6,11 @@
 package fr.miage.randorandonnees.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,7 +21,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "randonnees")
 public class Randonnee implements Serializable{
     @Id
-    private Integer idR;
+    private Long idR;
     
     private String titreR;
     private Integer niveauCible;
@@ -38,12 +40,12 @@ public class Randonnee implements Serializable{
     private Date date3;
     
     //pour chaque date (key), on aura la list des id Membres ayant voté pour cette date
-    private HashMap<Date,List<Integer>> votesR;
+    private HashMap<Date,ArrayList<Integer>> votesR;
 
     public Randonnee() {
     }
 
-    public Randonnee(String titreR, Integer niveauCible, Integer idTeamLeader, String lieuR, String distanceR, Long coutFixeR, Long coutVariableR, Date date1, Date date2, Date date3, HashMap<Date, List<Integer>> votesR) {
+    public Randonnee(String titreR, Integer niveauCible, Integer idTeamLeader, String lieuR, String distanceR, Long coutFixeR, Long coutVariableR, Date date1, Date date2, Date date3) {
         this.titreR = titreR;
         this.niveauCible = niveauCible;
         this.idTeamLeader = idTeamLeader;
@@ -59,7 +61,16 @@ public class Randonnee implements Serializable{
         //params par défaut
         this.inscriCloture = false;
         this.sondageCloture = false;
-       // this.votesR = new HashMap<this.date1,new List(),>
+        this.votesR = new HashMap<Date,ArrayList<Integer>>() {{
+        put(date1,new ArrayList<Integer>());
+        put(date2,new ArrayList<Integer>());
+        put(date3,new ArrayList<Integer>());
+    }};
+        
+    }
+
+    public Long getId() {
+        return this.idR;
     }
     
     

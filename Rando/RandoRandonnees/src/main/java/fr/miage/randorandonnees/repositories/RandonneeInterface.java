@@ -12,6 +12,6 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author Maha
  */
-public interface randonneeInterface  extends CrudRepository<Randonnee,Long> {
+public interface RandonneeInterface  extends CrudRepository<Randonnee,Long> {
     
 }
