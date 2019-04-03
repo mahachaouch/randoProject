@@ -6,6 +6,7 @@
 package fr.miage.randomembre.repositories;
 
 import fr.miage.randomembre.entities.Membre;
+import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface MembreInterface extends CrudRepository<Membre,Long>{
+
+    public Optional<Membre> findByIsTLIsTrue();
+
+    public Optional<Membre> findByIsPresidentIsTrue();
+
+    public Optional<Membre> findByIsSecretaireIsTrue();
     
 }
