@@ -10,6 +10,7 @@ import fr.miage.randorandonnees.repositories.RandonneeInterface;
 import static java.lang.Long.parseLong;
 import java.util.List;
 import java.util.Optional;
+import javax.management.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -37,9 +38,13 @@ public class GestionRandonnee {
 
     public void majRando(Randonnee rando) {
         
-        Randonnee randoToUpdate = this.getRandoById(rando.getId());
-        if(randoToUpdate != null){
+        Optional<Randonnee> randoReturn =  this.randoInterface.findById(rando.getId());
+        Query query = new Query();
+        //Randonnee r = mongoOperations
+        if(randoReturn.get() != null){
             //copie tous les attribue de rando dans randoToUpdate
+          // List<Randonnee> randoArrayResult = (List<Randonnee>) randoReturn.get();
+          
         }
     }
     
