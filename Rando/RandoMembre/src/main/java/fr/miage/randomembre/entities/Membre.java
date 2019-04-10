@@ -37,14 +37,14 @@ public class Membre implements Serializable{
     private Boolean isPresident;
     private Boolean isSecretaire;
     private Long cotisationM;
-    private String ribM;
+    private String ibanM;
     private Integer niveauM;
     
     
     public Membre() {
     }
 
-    public Membre(String nomM, String prenomM, String mailM, String loginM, String mdpM, String adressM, Integer licenceM, Date anneeCertificat, Date anneeCotisation, Long cotisationM, String ribM, Integer niveauM) {
+    public Membre(String nomM, String prenomM, String mailM, String loginM, String mdpM, String adressM, Integer licenceM, Date anneeCertificat, Date anneeCotisation, Long cotisationM, String ibanM, Integer niveauM) {
         this.nomM = nomM;
         this.prenomM = prenomM;
         this.mailM = mailM;
@@ -55,7 +55,7 @@ public class Membre implements Serializable{
         this.anneeCertificat = anneeCertificat;
         this.anneeCotisation = anneeCotisation;
         this.cotisationM = cotisationM;
-        this.ribM = ribM;
+        this.ibanM = ibanM;
         this.niveauM = niveauM;
         
         //params par défaut
@@ -125,8 +125,8 @@ public class Membre implements Serializable{
         return cotisationM;
     }
 
-    public String getRibM() {
-        return ribM;
+    public String getIbanM() {
+        return ibanM;
     }
 
     public Integer getNiveauM() {
@@ -193,8 +193,8 @@ public class Membre implements Serializable{
         this.cotisationM = cotisationM;
     }
 
-    public void setRibM(String ribM) {
-        this.ribM = ribM;
+    public void setIbanM(String ibanM) {
+        this.ibanM = ibanM;
     }
 
     public void setNiveauM(Integer niveauM) {

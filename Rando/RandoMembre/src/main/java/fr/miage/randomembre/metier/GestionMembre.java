@@ -50,15 +50,31 @@ public class GestionMembre {
     }
 
     public Membre createMembre(Membre membre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return this.membreInterface.save(membre);
     }
 
     public void updateMembre(Membre membre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.membreInterface.save(membre);
     }
 
     public void deleteMembre(Long idMembre) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
+        if(!membreReturn.isPresent()){
+           //TODO exception 
+        }
+        Membre m = membreReturn.get();
+        this.membreInterface.delete(m);
+    }
+
+    public void payerCotisation(long idMembre, String iban, long cotisation) {
+        Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
+        if(!membreReturn.isPresent()){
+           //TODO exception 
+        }
+        Membre m = membreReturn.get();
+        m.setIbanM(iban);
+        m.setCotisationM(cotisation);
+        this.membreInterface.save(m);
     }
     
     
