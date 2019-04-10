@@ -11,8 +11,10 @@ import java.util.List;
 
 import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Maha
  */
 @RestController
-@RequestMapping("/api/membres")
+@RequestMapping("/api/randoMembre")
 public class MembreRestController {
     
     @Autowired
@@ -69,5 +71,13 @@ public class MembreRestController {
     public void deleteMembre(@PathVariable("recetteId") String id){
         Long idMembre = Long.parseLong(id);
         this.gestMembre.deleteMembre(idMembre);
+    }
+    
+    @PatchMapping("/payerCotisation")
+    public void payerCotisation(@RequestBody MultiValueMap<String, String> formParams){
+        long idMembre = Long.parseLong(formParams.getFirst("idMembre"));
+        String iban = formParams.getFirst("iban");
+        long cotisation = Long.parseLong(formParams.getFirst("cotisation"));
+        this.gestMembre.payerCotisation(idMembre,iban,cotisation);
     }
 }
