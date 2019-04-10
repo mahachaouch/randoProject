@@ -7,6 +7,8 @@ package fr.miage.randomembre.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -40,6 +42,8 @@ public class Membre implements Serializable{
     private String ribM;
     private Integer niveauM;
     
+    @Column(name="association")
+    private Long assotId;
     
     public Membre() {
     }

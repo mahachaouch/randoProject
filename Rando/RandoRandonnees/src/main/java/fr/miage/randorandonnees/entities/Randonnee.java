@@ -55,7 +55,6 @@ public class Randonnee implements Serializable{
         this.date1 = date1;
         this.date2 = date2;
         this.date3 = date3;
-        this.votesR = votesR;
         
         //params par défaut
         this.inscriCloture = false;

@@ -8,6 +8,8 @@ package fr.miage.randomembre.expoServices;
 import fr.miage.randomembre.entities.Membre;
 import fr.miage.randomembre.metier.GestionMembre;
 import java.util.List;
+
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,11 @@ public class MembreRestController {
         Long idMembre = Long.parseLong(id);
         return this.gestMembre.getMembre(idMembre);
     } 
+    
+    @RequestMapping(value = "/{memId}/get", method = RequestMethod.GET,produces =org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
+    public Membre getMemberById(@PathVariable(value = "memId") final String memId) {
+    	return this.gestMembre.getMembre(Long.parseLong(memId));
+    }
     
     @GetMapping(params = "type")
     public List<Membre> getMembresByType(@RequestParam(value="type") String type){

@@ -6,12 +6,14 @@
 package fr.miage.randorandonnees.repositories;
 
 import fr.miage.randorandonnees.entities.Randonnee;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  *
  * @author Maha
  */
-public interface RandonneeInterface  extends CrudRepository<Randonnee,Long> {
+public interface RandonneeInterface  extends MongoRepository<Randonnee,Long> {
     
 }

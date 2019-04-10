@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fr.miage.randorandonnees.expoServices;
 
 import fr.miage.randorandonnees.entities.Randonnee;
@@ -38,6 +33,17 @@ public class RandonneeRestController {
     
     @PutMapping("/{randoId}")
     public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando){
-            this.gestRando.majRando(rando);
+            this.gestRando.majRando(Long.parseLong(id),rando);
     } 
+    
+    @PutMapping("/{randoId}")
+    public void cloturerVotes(@PathVariable("randoId") String id) {
+    	this.gestRando.cloturerVotes(Long.parseLong(id));
+    }
+    
+    @PutMapping("/{randoId}")
+    public void cloturerInscription(@PathVariable("randoId") String id) {
+    	this.gestRando.cloturerInscription(Long.parseLong(id));
+    }
+    
 }
