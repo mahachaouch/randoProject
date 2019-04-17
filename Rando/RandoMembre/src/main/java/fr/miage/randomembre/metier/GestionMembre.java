@@ -7,6 +7,7 @@ package fr.miage.randomembre.metier;
 
 import fr.miage.randomembre.entities.Membre;
 import fr.miage.randomembre.repositories.MembreInterface;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,14 @@ public class GestionMembre {
     }
 
     public void updateMembre(Membre membre) {
-        this.membreInterface.save(membre);
+        
+        Optional<Membre> membreReturn =  this.membreInterface.findById(membre.getIdM());
+        if(!membreReturn.isPresent()){
+           //TODO exception 
+        }
+        Membre membreEnr = membreReturn.get();
+        this.membreInterface.delete(membreEnr);
+        this.membreInterface.save(membreEnr);
     }
 
     public void deleteMembre(Long idMembre) {
@@ -74,6 +82,17 @@ public class GestionMembre {
         Membre m = membreReturn.get();
         m.setIbanM(iban);
         m.setCotisationM(cotisation);
+        m.setAnneeCertificat(new Date());
+        this.membreInterface.save(m);
+    }
+    
+    public void majCertifMedical(long idMembre) {
+        Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
+        if(!membreReturn.isPresent()){
+           //TODO exception 
+        }
+        Membre m = membreReturn.get();
+        m.setAnneeCertificat(new Date());
         this.membreInterface.save(m);
     }
     
