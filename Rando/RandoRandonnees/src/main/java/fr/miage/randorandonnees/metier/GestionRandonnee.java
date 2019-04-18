@@ -166,4 +166,24 @@ public class GestionRandonnee {
             }               
         }
     }
+    
+    public List<Randonnee> getRandoPassees(){
+        List<Randonnee> randoFinished = new ArrayList<Randonnee>();
+        List<Randonnee> randoReturn = this.randoInterface.findAll();
+        
+        for(int i=0;i<randoReturn.size();i++){
+            Date today = new Date();
+            Randonnee r = randoReturn.get(i);
+            if(r.getDateRando().compareTo(today)> 0){
+                randoFinished.add(r);
+            }
+        }        
+        return randoFinished;
+    }
+    
+    public List<Randonnee> getCouTotalRandos(){
+        //TO DO
+        return null;
+    }
+            
 }

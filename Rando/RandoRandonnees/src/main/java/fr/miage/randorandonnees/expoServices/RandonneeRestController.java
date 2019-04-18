@@ -6,6 +6,7 @@ import static java.lang.Long.parseLong;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,42 +25,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/randonnee")
 public class RandonneeRestController {
-    
+
     private GestionRandonnee gestRando;
-    
+
     @GetMapping("/{randoId}")
-    public Randonnee getRandonnee(@PathVariable("randoId") String id){
+    public Randonnee getRandonnee(@PathVariable("randoId") String id) {
         return this.gestRando.getRandoById(parseLong(id));
     }
-    
+
     @PostMapping
-    public Randonnee creerRandonnee(@RequestBody Randonnee rando){
+    public Randonnee creerRandonnee(@RequestBody Randonnee rando) {
         return this.gestRando.createRando(rando);
     }
-    
+
     @PutMapping("/{randoId}")
-    public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando){
-            this.gestRando.majRando(Long.parseLong(id),rando);
-    } 
-    
+    public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando) {
+        this.gestRando.majRando(Long.parseLong(id), rando);
+    }
+
     @PatchMapping("/cloturerVotes/{randoId}")
     public void cloturerVotes(@PathVariable("randoId") String id) {
-    	this.gestRando.cloturerVotes(Long.parseLong(id));
+        this.gestRando.cloturerVotes(Long.parseLong(id));
     }
-    
+
     @PatchMapping("/cloturerInscription/{randoId}")
     public void cloturerInscription(@PathVariable("randoId") String id) {
-    	this.gestRando.cloturerInscription(Long.parseLong(id));
+        this.gestRando.cloturerInscription(Long.parseLong(id));
     }
-    
+
     @PatchMapping("/voterCreneau/{randoId}")
-    public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String participation, String dateChoisie){
+    public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String participation, String dateChoisie) {
         SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
         try {
             Date dateFormated = formater.parse(dateChoisie);
-        this.gestRando.voterCreneau(Long.parseLong(idRando),Long.parseLong(idMembre),dateFormated);
+            this.gestRando.voterCreneau(Long.parseLong(idRando), Long.parseLong(idMembre), dateFormated);
         } catch (ParseException ex) {
             Logger.getLogger(RandonneeRestController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @GetMapping
+    public List<Randonnee> getRandoPassees() {
+        return (List<Randonnee>) this.gestRando.getRandoPassees();
+    }
+    
+        @GetMapping
+    public List<Randonnee> getCouTotalRandos() {
+        return (List<Randonnee>) this.gestRando.getCouTotalRandos();
     }
 }
