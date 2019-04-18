@@ -42,18 +42,13 @@ public class GestionRandonnee {
     	Date today = new Date();
     	Boolean datesValides = rando.getDate1().equals(today) && rando.getDate2().equals(today) && rando.getDate3().equals(today);
     	
-    	//organisateur apte
-    	Boolean orgOk = true;
-    	 final String uri = "http://localhost:8080/membre.json";
-         
-    	    RestTemplate restTemplate = new RestTemplate();
-    	    String result = restTemplate.getForObject(uri, String.class);
-    	   // result.
-    	
+    	//organisateur apte : vérifier que la personne qui veut créer la rando est un organisateur + il a un niveau 1,5 ...
+    	//coté angular
+        
     	//vérifier cout
     	Boolean coutOk= true;
     	
-    	if (datesValides && orgOk && coutOk) {
+    	if (datesValides && coutOk) {
     	    return this.randoInterface.save(rando);
     	}else {
     		return null;
@@ -100,7 +95,7 @@ public class GestionRandonnee {
 	}
 
 	public void cloturerInscription(long id) {
-		// TODO Auto-generated method stub
+		
 		Randonnee randoReturn =  this.randoInterface.findById(id).get();
 		if(randoReturn != null) {
 			//cloturer les votes

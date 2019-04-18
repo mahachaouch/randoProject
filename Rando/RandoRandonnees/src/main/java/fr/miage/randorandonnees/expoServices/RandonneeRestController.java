@@ -4,6 +4,7 @@ import fr.miage.randorandonnees.entities.Randonnee;
 import fr.miage.randorandonnees.metier.GestionRandonnee;
 import static java.lang.Long.parseLong;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,12 +37,12 @@ public class RandonneeRestController {
             this.gestRando.majRando(Long.parseLong(id),rando);
     } 
     
-    @PutMapping("/{randoId}")
+    @PatchMapping("/cloturerVotes/{randoId}")
     public void cloturerVotes(@PathVariable("randoId") String id) {
     	this.gestRando.cloturerVotes(Long.parseLong(id));
     }
     
-    @PutMapping("/{randoId}")
+    @PatchMapping("/cloturerInscription/{randoId}")
     public void cloturerInscription(@PathVariable("randoId") String id) {
     	this.gestRando.cloturerInscription(Long.parseLong(id));
     }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -11,15 +12,22 @@ import org.springframework.data.annotation.Id;
 
 @Entity
 @Table(name = "association")
-public class Association {
+public class Association implements Serializable{
 	
 	    @Id
+            @GeneratedValue
+            @javax.persistence.Id
 	    private Long idR;
 	    
 	    private String nomAsso;
 	    private Float budgetAsso;
 	    private Float cotisationMin;
+
+    public Association() {
+    }
 	    
+            
+            
 	    @OneToMany
 	    private ArrayList<Membre> membresAsso;
 	    
