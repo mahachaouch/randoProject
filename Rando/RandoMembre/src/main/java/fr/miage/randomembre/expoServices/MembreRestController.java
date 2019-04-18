@@ -68,16 +68,22 @@ public class MembreRestController {
     }
     
     @DeleteMapping("/{membreId}")
-    public void deleteMembre(@PathVariable("recetteId") String id){
+    public void deleteMembre(@PathVariable("membreId") String id){
         Long idMembre = Long.parseLong(id);
         this.gestMembre.deleteMembre(idMembre);
     }
     
-    @PatchMapping("/payerCotisation")
-    public void payerCotisation(@RequestBody MultiValueMap<String, String> formParams){
-        long idMembre = Long.parseLong(formParams.getFirst("idMembre"));
+    @PatchMapping("/payerCotisation/{membreId}")
+    public void payerCotisation(@PathVariable("membreId") String id, @RequestBody MultiValueMap<String, String> formParams){
+        long idMembre = Long.parseLong(id);
         String iban = formParams.getFirst("iban");
         long cotisation = Long.parseLong(formParams.getFirst("cotisation"));
         this.gestMembre.payerCotisation(idMembre,iban,cotisation);
+    }
+    
+    @PatchMapping("/majCertifMedical/{membreId}")
+    public void majCertifMedical(@PathVariable("membreId") String id){
+        long idMembre = Long.parseLong(id);
+        this.gestMembre.majCertifMedical(idMembre);
     }
 }
