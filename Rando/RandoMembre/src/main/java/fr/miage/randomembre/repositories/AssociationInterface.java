@@ -5,7 +5,7 @@
  */
 package fr.miage.randomembre.repositories;
 
-import fr.miage.randomembre.entities.Membre;
+import fr.miage.randomembre.entities.Association;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +14,6 @@ import org.springframework.stereotype.Repository;
  * @author Maha
  */
 @Repository
-public interface AssociationInterface extends CrudRepository<Membre,Long>{
+public interface AssociationInterface extends CrudRepository<Association,Long>{
  
 }

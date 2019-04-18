@@ -50,6 +50,10 @@ public class Association implements Serializable{
 		public Float getBudgetAsso() {
 			return budgetAsso;
 		}
+                
+                public Float getCotisationMin(){
+                    return this.cotisationMin;
+                }
 		
 		public void setBudgetAsso(Float budgetAsso) {
 			this.budgetAsso = budgetAsso;

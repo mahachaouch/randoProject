@@ -78,7 +78,8 @@ public class MembreRestController {
         long idMembre = Long.parseLong(id);
         String iban = formParams.getFirst("iban");
         long cotisation = Long.parseLong(formParams.getFirst("cotisation"));
-        this.gestMembre.payerCotisation(idMembre,iban,cotisation);
+        long idAsso = Long.parseLong(formParams.getFirst("association"));
+        this.gestMembre.payerCotisation(idMembre,iban,cotisation,idAsso);
     }
     
     @PatchMapping("/majCertifMedical/{membreId}")

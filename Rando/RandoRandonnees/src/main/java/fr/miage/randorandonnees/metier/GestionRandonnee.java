@@ -160,6 +160,9 @@ public class GestionRandonnee {
             //vérifier que les votes sont cloturés et que l'inscription est encore ouverte et qu il reste des places
             if(!randoReturn.getInscriCloture() && randoReturn.getSondageCloture()&& !randoReturn.isOverBooked()){
                 randoReturn.ajouterMembreInscri(idMembre);
+                
+                //màj rando
+                randoInterface.save(randoReturn);
             }               
         }
     }
