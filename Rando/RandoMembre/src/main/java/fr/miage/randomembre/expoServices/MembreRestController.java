@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/randoMembre")
 public class MembreRestController {
     
-   
+    @Autowired
     private GestionMembre gestMembre;
     
     @GetMapping

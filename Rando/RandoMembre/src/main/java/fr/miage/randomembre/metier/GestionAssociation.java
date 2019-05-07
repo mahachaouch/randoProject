@@ -6,11 +6,13 @@
 package fr.miage.randomembre.metier;
 
 import fr.miage.randomembre.entities.Membre;
+import org.springframework.stereotype.Controller;
 
 /**
  *
  * @author Maha
  */
+@Controller
 public class GestionAssociation {
 
     public Membre getAssociation(Long idAsso) {
