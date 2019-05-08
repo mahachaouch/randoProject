@@ -62,15 +62,16 @@ public class GestionMembre {
         return this.membreInterface.save(membre);
     }
 
-    public void updateMembre(Membre membre) {
+    public void updateMembre(Long idMembre, Membre membre) {
 
         Optional<Membre> membreReturn = this.membreInterface.findById(membre.getIdM());
         if (!membreReturn.isPresent()) {
             //TODO exception 
         }
-        Membre membreEnr = membreReturn.get();
-        this.membreInterface.delete(membreEnr);
-        this.membreInterface.save(membreEnr);
+        //Membre membreEnr = membreReturn.get();
+        //this.membreInterface.delete(membreEnr);
+        membre.setIdM(idMembre);
+        this.membreInterface.save(membre);
     }
 
     public void deleteMembre(Long idMembre) {

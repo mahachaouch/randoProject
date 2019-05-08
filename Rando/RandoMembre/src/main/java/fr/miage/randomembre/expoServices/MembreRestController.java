@@ -61,10 +61,10 @@ public class MembreRestController {
         return this.gestMembre.createMembre(membre);
     }
     
-    @PutMapping("/{membreId}")
+    @PutMapping(value="/{membreId}")
     public void majMembre(@PathVariable("membreId") String id, @RequestBody Membre membre){
         Long idMembre = Long.parseLong(id);
-        this.gestMembre.updateMembre(membre);
+        this.gestMembre.updateMembre(idMembre,membre);
     }
     
     @DeleteMapping("/{membreId}")
