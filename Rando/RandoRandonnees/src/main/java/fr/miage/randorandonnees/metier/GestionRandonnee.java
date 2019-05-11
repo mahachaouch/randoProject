@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.Optional;
 import javax.management.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
 
 /**
  *
  * @author Maha
  */
+@Controller
 public class GestionRandonnee {
 
     @Autowired
