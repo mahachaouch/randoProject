@@ -93,5 +93,12 @@ public class MembreRestController {
         return this.gestMembre.reporting();
     }
     
+    @GetMapping("/connexion")
+    public Long connexion(@RequestBody MultiValueMap<String, String> formParams){
+        String loginM = formParams.getFirst("loginM");
+        String mdpM = formParams.getFirst("mdpM");
+        return this.gestMembre.connexion(loginM,mdpM);
+    }
+    
     
 }

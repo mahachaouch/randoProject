@@ -143,4 +143,15 @@ public class GestionMembre {
         
     }
 
+    public Long connexion(String loginM, String mdpM) {
+        Optional<Membre> membreReturn = this.membreInterface.findMembreByLoginMAndMdpM(loginM,mdpM);
+        if (!membreReturn.isPresent()) {
+            return new Long("0") ;
+        }else{
+            Membre m = membreReturn.get();
+            return m.getIdM();
+        }
+        
+    }
+
 }
