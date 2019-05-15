@@ -9,8 +9,11 @@ import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.entities.Membre;
 import fr.miage.randomembre.repositories.AssociationInterface;
 import fr.miage.randomembre.repositories.MembreInterface;
+import java.util.Calendar;
+import static java.util.Calendar.YEAR;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -114,6 +117,30 @@ public class GestionMembre {
         Membre m = membreReturn.get();
         m.setAnneeCertificat(new Date());
         this.membreInterface.save(m);
+    }
+
+    public String reporting() {
+        List<Membre> listMembre = (List<Membre>) membreInterface.findAll();
+        int nbMembre = 0;
+        int nbTL = 0;
+        long totalCotisationRegle = 0;
+        for (Membre membre : listMembre) {
+            nbMembre++;
+            if (membre.getIsTL()){
+                nbTL++;
+            }
+            Calendar cal1 = Calendar.getInstance(Locale.US);
+            cal1.setTime(membre.getAnneeCotisation());
+            Calendar cal2 = Calendar.getInstance(Locale.US);
+            cal2.setTime(new java.util.Date());
+            
+            if (cal1.get(YEAR) == cal2.get(YEAR)){
+                totalCotisationRegle += membre.getCotisationM();
+            }
+        }
+        return "{\"nbMembre\" : \""+nbMembre+"\",\"nbTL\" : \""+nbTL+"\",\"totalCotisationRegle\" : \""+totalCotisationRegle+"\"}";
+
+        
     }
 
 }

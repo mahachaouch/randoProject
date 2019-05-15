@@ -87,4 +87,11 @@ public class MembreRestController {
         long idMembre = Long.parseLong(id);
         this.gestMembre.majCertifMedical(idMembre);
     }
+    
+    @GetMapping("/reporting")
+    public String reporting(){
+        return this.gestMembre.reporting();
+    }
+    
+    
 }
