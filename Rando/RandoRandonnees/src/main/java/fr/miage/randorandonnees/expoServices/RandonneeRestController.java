@@ -1,5 +1,8 @@
 package fr.miage.randorandonnees.expoServices;
 
+import ch.qos.logback.core.net.ObjectWriter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.util.JSON;
 import fr.miage.randorandonnees.entities.Randonnee;
 import fr.miage.randorandonnees.metier.GestionRandonnee;
 import static java.lang.Long.parseLong;
@@ -30,20 +33,29 @@ public class RandonneeRestController {
     @Autowired
     private GestionRandonnee gestRando;
 
+    @GetMapping
+    public List<Randonnee> getRandos(){
+        return (List<Randonnee>) this.gestRando.getAllRando();
+    } 
+    
     @GetMapping("/{randoId}")
-    public Randonnee getRandonnee(@PathVariable("randoId") String id) {
-        return this.gestRando.getRandoById(parseLong(id));
+    public String getRandonnee(@PathVariable("randoId") String id) {
+        //return this.gestRando.getRandoById(id).getNbPlaces();
+        System.out.println(this.gestRando.getRandoById(id).toString());
+        return this.gestRando.getRandoById(id).toString();
     }
-
+    
     @PostMapping
     public Randonnee creerRandonnee(@RequestBody Randonnee rando) {
+        System.out.println(rando.getTitreR());
         return this.gestRando.createRando(rando);
     }
-
-    @PutMapping("/{randoId}")
+    
+@PutMapping("/{randoId}")
     public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando) {
-        this.gestRando.majRando(Long.parseLong(id), rando);
+        this.gestRando.majRando(id, rando);
     }
+   /* 
 
     @PatchMapping("/cloturerVotes/{randoId}")
     public void cloturerVotes(@PathVariable("randoId") String id) {
@@ -64,9 +76,9 @@ public class RandonneeRestController {
         } catch (ParseException ex) {
             Logger.getLogger(RandonneeRestController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
 
-    @GetMapping
+  /*  @GetMapping
     public List<Randonnee> getRandoPassees() {
         return (List<Randonnee>) this.gestRando.getRandoPassees();
     }
@@ -74,5 +86,5 @@ public class RandonneeRestController {
         @GetMapping
     public List<Randonnee> getCouTotalRandos() {
         return (List<Randonnee>) this.gestRando.getCouTotalRandos();
-    }
+    }*/
 }

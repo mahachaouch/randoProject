@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.persistence.GeneratedValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,7 +21,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "randonnees")
 public class Randonnee implements Serializable{
     @Id
-    private Long idR;
+    @GeneratedValue
+    private String idR;
     
     private String titreR;
     private Integer niveauCible;
@@ -33,12 +35,16 @@ public class Randonnee implements Serializable{
     private Boolean sondageCloture;
     private Boolean inscriCloture;
     private List<Long> listInscris;
-    private final Integer nbPlaces = 2;
+    private  Integer nbPlaces = 2;
     
     private Date date1;
     private Date date2;
     private Date date3;
-    
+
+    public Integer getNbPlaces() {
+        return nbPlaces;
+    }
+
     //pour chaque date (key), on aura la list des id Membres ayant voté pour cette date
     private HashMap<Date,ArrayList<Long>> votesR;
 
@@ -67,11 +73,11 @@ public class Randonnee implements Serializable{
     }};
         
     }
-    public Long getId() {
+    public String getId() {
         return this.idR;
     }
 
-    public void setIdR(Long idR) {
+    public void setIdR(String idR) {
         this.idR = idR;
     }
 
@@ -135,7 +141,7 @@ public class Randonnee implements Serializable{
         this.votesR = votesR;
     }
 
-    public Long getIdR() {
+    public String getIdR() {
         return idR;
     }
 
@@ -205,5 +211,25 @@ public class Randonnee implements Serializable{
     
     public Boolean isOverBooked(){
         return this.listInscris.size() == this.nbPlaces ;
+    }
+    
+    public String toString(){
+        //return this.titreR;
+                
+        
+        return "{" + "\"tire\" :\"" + this.titreR + "\", "
+                + "\"niveauCible\" :\"" + this.niveauCible + "\", " 
+                + "\"idTL\" :\"" + this.idTeamLeader + "\", "
+                + "\"lieu\" :\"" + this.lieuR + "\", "
+                + "\"distance\" :\"" + this.distanceR + "\", "
+                + "\"coutFixe\" :\"" + this.coutFixeR + "\", "
+                + "\"coutVariable\" :\"" + this.coutVariableR + "\", "
+                + "\"sondageCloture\" :\"" + this.sondageCloture + "\", "
+                + "\"inscriCloture\" :\"" + this.inscriCloture + "\", "
+                //+ "\"listInscris\" :\"" + this.listInscris.toString() + "\", "
+                + "\"nbPlaces\" :\"" + this.nbPlaces + "\" "
+                //+ "\"votes\" :\"" + this.votesR.toString() + "\" "
+                + "}"
+                ;
     }
 }

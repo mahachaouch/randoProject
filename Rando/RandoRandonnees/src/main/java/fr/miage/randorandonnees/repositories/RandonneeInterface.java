@@ -8,12 +8,13 @@ package fr.miage.randorandonnees.repositories;
 import fr.miage.randorandonnees.entities.Randonnee;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Maha
  */
-public interface RandonneeInterface  extends MongoRepository<Randonnee,Long> {
+@Repository
+public interface RandonneeInterface  extends MongoRepository<Randonnee,String> {
     
 }

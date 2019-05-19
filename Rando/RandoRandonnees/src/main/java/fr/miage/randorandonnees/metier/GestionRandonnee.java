@@ -29,14 +29,14 @@ public class GestionRandonnee {
     @Autowired
     private RandonneeInterface randoInterface;
     
-    public List<Randonnee> getAllMembres() {
+    public List<Randonnee> getAllRando() {
         return (List<Randonnee>) randoInterface.findAll();
     }
 
-    public Randonnee getRandoById(Long id) {
+    public Randonnee getRandoById(String id) {
         Optional<Randonnee> randoReturn = this.randoInterface.findById(id);
-        if (randoReturn.get() != null) {
-        }
+       // if (randoReturn.get() != null) {
+        //}
         return randoReturn.get();
     }
 
@@ -50,9 +50,9 @@ public class GestionRandonnee {
         //organisateur apte : vérifier que la personne qui veut créer la rando est un organisateur + il a un niveau 1,5 ...
         //coté angular
         //vérifier cout
-        Boolean coutOk = true;
-
-        if (datesValides && coutOk) {
+        
+       // return this.randoInterface.save(rando);
+        if (datesValides) {
             return this.randoInterface.save(rando);
         } else {
             return null;
@@ -60,7 +60,7 @@ public class GestionRandonnee {
     }
 
     //prend en paramètre une randonnée contenant les modification appaortées aux paramètres 
-    public void majRando(Long id, Randonnee rando) {
+    public void majRando(String id, Randonnee rando) {
 
         Randonnee randoReturn = this.randoInterface.findById(id).get();
 
@@ -86,8 +86,7 @@ public class GestionRandonnee {
         }
     }
 
-    public void cloturerVotes(Long id) {
-        // TODO Auto-generated method stub
+    public void cloturerVotes(String id) {
         Randonnee randoReturn = this.randoInterface.findById(id).get();
         if (randoReturn != null) {
             //cloturer les votes
@@ -98,7 +97,7 @@ public class GestionRandonnee {
         }
     }
 
-    public void cloturerInscription(long id) {
+    public void cloturerInscription(String id) {
 
         Randonnee randoReturn = this.randoInterface.findById(id).get();
         if (randoReturn != null) {
@@ -136,7 +135,7 @@ public class GestionRandonnee {
         return null;
     }
 
-    public void voterCreneau(long idRando, long idMembre, Date dateChoisie) {
+    public void voterCreneau(String idRando, long idMembre, Date dateChoisie) {
         //chercher la rando
         Randonnee randoReturn = this.randoInterface.findById(idRando).get();
         if (randoReturn != null) {
@@ -152,7 +151,7 @@ public class GestionRandonnee {
     }
     
     //inscription d un membre à une rando
-    public void inscriptionRando(long idRando, long idMembre) {
+    public void inscriptionRando(String idRando, long idMembre) {
         //chercher la rando
         Randonnee randoReturn = this.randoInterface.findById(idRando).get();
         
