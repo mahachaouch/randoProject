@@ -52,11 +52,18 @@ public class GestionRandonnee {
         //vérifier cout
         
        // return this.randoInterface.save(rando);
-        if (datesValides) {
-            return this.randoInterface.save(rando);
+       /* if (datesValides) {
+            Randonnee initRando = new Randonnee(rando.getTitreR(),rando.getNiveauCible(),rando.getIdTeamLeader(),rando.getLieuR(),rando.getDistanceR(),rando.getCoutFixeR(),rando.getCoutVariableR(),rando.getDate1(),rando.getDate2(),rando.getDate3());
+            System.out.println(initRando.toString());
+            return this.randoInterface.save(initRando);
+            
+          //  return this.randoInterface.save(rando);
         } else {
             return null;
-        }
+        }*/
+          Randonnee initRando = new Randonnee(rando.getTitreR(),rando.getNiveauCible(),rando.getIdTeamLeader(),rando.getLieuR(),rando.getDistanceR(),rando.getCoutFixeR(),rando.getCoutVariableR(),rando.getDate1(),rando.getDate2(),rando.getDate3());
+            System.out.println(initRando.toString());
+            return this.randoInterface.save(initRando);
     }
 
     //prend en paramètre une randonnée contenant les modification appaortées aux paramètres 
@@ -185,6 +192,19 @@ public class GestionRandonnee {
     public List<Randonnee> getCouTotalRandos(){
         //TO DO
         return null;
+    }
+    
+    public String convertDataToString(List<Randonnee> randos){
+        String result = "[";
+        for(int i=0;i< randos.size();i++){
+            result+= (String)randos.get(i).toString() +",";
+        }
+        result = result.substring(0, result.length() - 1);
+        return result+"]";
+    }
+
+    public List<Randonnee> getRandoVoteNonCloture() {
+        return  this.randoInterface.findByInscriCloture(false);
     }
             
 }
