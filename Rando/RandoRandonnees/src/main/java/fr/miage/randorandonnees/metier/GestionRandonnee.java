@@ -203,8 +203,11 @@ public class GestionRandonnee {
         return result+"]";
     }
 
-    public List<Randonnee> getRandoVoteNonCloture() {
+    public List<Randonnee> getRandoInscriNonCloture() {
         return  this.randoInterface.findByInscriCloture(false);
     }
-            
+    
+    public List<Randonnee> getRandoVoteNonCloture() {
+        return  this.randoInterface.findBySondageCloture(false);
+    }
 }

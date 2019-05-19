@@ -47,12 +47,20 @@ public class RandonneeRestController {
             return this.gestRando.convertDataToString(randos);
     }
     
+    @GetMapping("/randoInscriNonCloture")
+    public String getRandosInsciNonCloture(){
+        List<Randonnee> randos = this.gestRando.getRandoInscriNonCloture();
+            return this.gestRando.convertDataToString(randos);
+    }
+    
     @GetMapping("/{randoId}")
     public String getRandonnee(@PathVariable("randoId") String id) {
         //return this.gestRando.getRandoById(id).getNbPlaces();
         System.out.println(this.gestRando.getRandoById(id).toString());
         return this.gestRando.getRandoById(id).toString();
     }
+    
+    //getRandoInscriNonCloture
     
     @PostMapping
     public Randonnee creerRandonnee(@RequestBody Randonnee rando) {

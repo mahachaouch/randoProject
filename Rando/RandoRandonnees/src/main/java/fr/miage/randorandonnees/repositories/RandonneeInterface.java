@@ -19,5 +19,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RandonneeInterface  extends MongoRepository<Randonnee,String> {
     List<Randonnee> findByInscriCloture(Boolean cloture);
+     List<Randonnee> findBySondageCloture(Boolean cloture);
     
 }
