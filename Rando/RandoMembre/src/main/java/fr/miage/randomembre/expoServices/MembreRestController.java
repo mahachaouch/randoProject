@@ -94,9 +94,7 @@ public class MembreRestController {
     }
     
     @GetMapping("/connexion")
-    public Long connexion(@RequestBody MultiValueMap<String, String> formParams){
-        String loginM = formParams.getFirst("loginM");
-        String mdpM = formParams.getFirst("mdpM");
+    public Membre connexion(@RequestParam("loginM") String loginM, @RequestParam("mdpM") String mdpM){
         return this.gestMembre.connexion(loginM,mdpM);
     }
     
