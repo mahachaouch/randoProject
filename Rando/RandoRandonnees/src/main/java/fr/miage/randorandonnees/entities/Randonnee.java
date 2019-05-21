@@ -66,11 +66,13 @@ public class Randonnee implements Serializable{
         //params par défaut
         this.inscriCloture = false;
         this.sondageCloture = false;
-        this.votesR = new HashMap<Date,ArrayList<Long>>() {{
+        this.listInscris = new ArrayList<Long>();
+        this.votesR = new HashMap<Date,ArrayList<Long>>();
+        /* this.votesR = new HashMap<Date,ArrayList<Long>>() {{
         put(date1,new ArrayList<Long>());
         put(date2,new ArrayList<Long>());
         put(date3,new ArrayList<Long>());
-    }};
+    }};*/
         
     }
     public String getId() {
@@ -213,12 +215,11 @@ public class Randonnee implements Serializable{
         return this.listInscris.size() == this.nbPlaces ;
     }
     
-    public String toString(){
-        //return this.titreR;
-                
+    public String toString(){                
         
-        return "{" + "\"tire\" :\"" + this.titreR + "\", "
+        return "{" + "\"titre\" :\"" + this.titreR + "\", "
                 + "\"niveauCible\" :\"" + this.niveauCible + "\", " 
+                + "\"id\" :\"" + this.idR + "\", " 
                 + "\"idTL\" :\"" + this.idTeamLeader + "\", "
                 + "\"lieu\" :\"" + this.lieuR + "\", "
                 + "\"distance\" :\"" + this.distanceR + "\", "
@@ -226,6 +227,9 @@ public class Randonnee implements Serializable{
                 + "\"coutVariable\" :\"" + this.coutVariableR + "\", "
                 + "\"sondageCloture\" :\"" + this.sondageCloture + "\", "
                 + "\"inscriCloture\" :\"" + this.inscriCloture + "\", "
+                + "\"date1\" :\"" + this.date1 + "\", " 
+                + "\"date2\" :\"" + this.date2 + "\", " 
+                + "\"date3\" :\"" + this.date3 + "\", " 
                 //+ "\"listInscris\" :\"" + this.listInscris.toString() + "\", "
                 + "\"nbPlaces\" :\"" + this.nbPlaces + "\" "
                 //+ "\"votes\" :\"" + this.votesR.toString() + "\" "

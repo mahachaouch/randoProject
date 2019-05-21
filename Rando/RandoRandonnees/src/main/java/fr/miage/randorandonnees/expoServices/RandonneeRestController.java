@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +35,23 @@ public class RandonneeRestController {
     private GestionRandonnee gestRando;
 
     @GetMapping
-    public List<Randonnee> getRandos(){
-        return (List<Randonnee>) this.gestRando.getAllRando();
-    } 
+    public String getRandos(){
+        List<Randonnee> randos = this.gestRando.getAllRando();
+       // System.out.println(this.gestRando.convertDataToString( this.gestRando.getAllRando()));
+        return this.gestRando.convertDataToString(randos);
+    }
+    
+    @GetMapping("/randoToVotes")
+    public String getRandosWithOpenVotes(){
+        List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
+            return this.gestRando.convertDataToString(randos);
+    }
+    
+    @GetMapping("/randoInscriNonCloture")
+    public String getRandosInsciNonCloture(){
+        List<Randonnee> randos = this.gestRando.getRandoInscriNonCloture();
+            return this.gestRando.convertDataToString(randos);
+    }
     
     @GetMapping("/{randoId}")
     public String getRandonnee(@PathVariable("randoId") String id) {
@@ -44,6 +59,8 @@ public class RandonneeRestController {
         System.out.println(this.gestRando.getRandoById(id).toString());
         return this.gestRando.getRandoById(id).toString();
     }
+    
+    //getRandoInscriNonCloture
     
     @PostMapping
     public Randonnee creerRandonnee(@RequestBody Randonnee rando) {
@@ -55,16 +72,16 @@ public class RandonneeRestController {
     public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando) {
         this.gestRando.majRando(id, rando);
     }
-   /* 
+   
 
     @PatchMapping("/cloturerVotes/{randoId}")
     public void cloturerVotes(@PathVariable("randoId") String id) {
-        this.gestRando.cloturerVotes(Long.parseLong(id));
+        this.gestRando.cloturerVotes(id);
     }
 
     @PatchMapping("/cloturerInscription/{randoId}")
     public void cloturerInscription(@PathVariable("randoId") String id) {
-        this.gestRando.cloturerInscription(Long.parseLong(id));
+        this.gestRando.cloturerInscription(id);
     }
 
     @PatchMapping("/voterCreneau/{randoId}")
@@ -72,11 +89,11 @@ public class RandonneeRestController {
         SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
         try {
             Date dateFormated = formater.parse(dateChoisie);
-            this.gestRando.voterCreneau(Long.parseLong(idRando), Long.parseLong(idMembre), dateFormated);
+            this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateFormated);
         } catch (ParseException ex) {
             Logger.getLogger(RandonneeRestController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }*/
+    }
 
   /*  @GetMapping
     public List<Randonnee> getRandoPassees() {

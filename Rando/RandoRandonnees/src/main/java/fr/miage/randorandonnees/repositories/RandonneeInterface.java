@@ -6,6 +6,8 @@
 package fr.miage.randorandonnees.repositories;
 
 import fr.miage.randorandonnees.entities.Randonnee;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +18,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface RandonneeInterface  extends MongoRepository<Randonnee,String> {
+    List<Randonnee> findByInscriCloture(Boolean cloture);
+     List<Randonnee> findBySondageCloture(Boolean cloture);
     
 }
