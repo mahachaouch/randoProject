@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -248,8 +249,18 @@ public class GestionRandonnee {
     //renvoie les randonnees dont le vote n est pas cloturé et aux quelles, le membre n'a pas encore voté
     public List<Randonnee> getRandoVotesNonClotureNonVoteParMembre(Long idMembre){
         List<Randonnee> allRandoWithOpenVotes = this.randoInterface.findBySondageCloture(false);
+        List<Randonnee> randosToReturn = new ArrayList<Randonnee>();
+       
         for(int i=0;i <allRandoWithOpenVotes.size();i++){
-            
+            HashMap votes = allRandoWithOpenVotes.get(i).getVotesR();
+             Iterator it = votes.entrySet().iterator();
+              while (it.hasNext()) {
+        HashMap.Entry pair = (HashMap.Entry)it.next();
+        System.out.println(pair.getKey() + " = " + pair.getValue());
+        it.remove(); // avoids a ConcurrentModificationException
+    }
         }
+        
+    return randosToReturn;
     }
 }

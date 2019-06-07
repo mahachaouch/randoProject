@@ -50,6 +50,12 @@ public class RandonneeRestController {
         List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
+    
+   /*     @GetMapping("/randoToVotes/{}")
+    public String getRandosWithOpenVotes() {
+        List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
+        return this.gestRando.convertDataToString(randos);
+    } */
 
     @GetMapping("/randoInscriNonCloture")
     public String getRandosInsciNonCloture() {
