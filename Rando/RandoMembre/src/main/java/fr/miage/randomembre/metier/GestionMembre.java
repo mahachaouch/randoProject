@@ -65,7 +65,7 @@ public class GestionMembre {
         return this.membreInterface.save(membre);
     }
 
-    public void updateMembre(Long idMembre, Membre membre) {
+    public void updateMembre(Membre membre) {
 
         Optional<Membre> membreReturn = this.membreInterface.findById(membre.getIdM());
         if (!membreReturn.isPresent()) {
@@ -73,7 +73,7 @@ public class GestionMembre {
         }
         //Membre membreEnr = membreReturn.get();
         //this.membreInterface.delete(membreEnr);
-        membre.setIdM(idMembre);
+        //membre.setIdM(idMembre);
         this.membreInterface.save(membre);
     }
 
@@ -86,26 +86,26 @@ public class GestionMembre {
         this.membreInterface.delete(m);
     }
 
-    public void payerCotisation(long idMembre, String iban, Long cotisation, Long idAsso) {
+    public void payerCotisation(long idMembre, String iban, Long cotisation) {
         Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
-        Optional<Association> assoReturn = this.assoInterface.findById(idAsso);
+        Optional<Association> assoReturn = this.assoInterface.findById((long)1);
 
         if (!membreReturn.isPresent() && !assoReturn.isPresent()) {
             //TODO exception 
         } else {
             Association asso = assoReturn.get();
-            if (cotisation >= asso.getCotisationMin()) {
+            //if (cotisation >= asso.getCotisationMin()) {
 
                 Membre m = membreReturn.get();
                 m.setIbanM(iban);
                 m.setCotisationM(cotisation);
-                m.setAnneeCertificat(new Date());
+                m.setAnneeCotisation(new Date());
 
                 asso.setBudgetAsso(asso.getBudgetAsso() + cotisation);
                 this.assoInterface.save(asso);
 
                 this.membreInterface.save(m);
-            }
+            //}
         }
     }
 

@@ -1,7 +1,6 @@
 package fr.miage.randomembre.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +15,7 @@ public class Association implements Serializable {
     @Id
     @GeneratedValue
     @javax.persistence.Id
-    private Long idR;
+    private Long idA;
 
     private String nomAsso;
     private Float budgetAsso;
@@ -24,15 +23,19 @@ public class Association implements Serializable {
 
     public Association() {
     }
-
-    private ArrayList<Membre> membresAsso;
-
-    public Long getIdR() {
-        return idR;
+    
+    public Association(String nomAsso, Float budgetAsso, Float cotisationMin) {
+        this.cotisationMin = cotisationMin;
+        this.nomAsso = nomAsso;
+        this.budgetAsso = budgetAsso;
     }
 
-    public void setIdR(Long idR) {
-        this.idR = idR;
+    public Long getIdA() {
+        return idA;
+    }
+
+    public void setIdA(Long idA) {
+        this.idA = idA;
     }
 
     public String getNomAsso() {
@@ -55,10 +58,6 @@ public class Association implements Serializable {
         this.budgetAsso = budgetAsso;
     }
 
-    public Association(String nomAsso, Float budgetAsso, Float cotisationMin) {
-        this.cotisationMin = cotisationMin;
-        this.nomAsso = nomAsso;
-        this.budgetAsso = budgetAsso;
-    }
+    
 
 }

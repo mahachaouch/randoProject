@@ -5,24 +5,34 @@
  */
 package fr.miage.randomembre.expoServices;
 
-import fr.miage.randomembre.entities.Membre;
+import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.metier.GestionAssociation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author Maha
  */
+@RestController
+@RequestMapping("/api/randoAsso")
 public class AssociationRestController {   
         
     @Autowired
     private GestionAssociation gestAsso;
     
-        @GetMapping(value="/{assoId}")
-    public Membre  getBudgetAsso(@PathVariable("assoId") String id){
-        Long idAsso = Long.parseLong(id);
-        return this.gestAsso.getAssociation(idAsso);
+    @GetMapping
+    public Association  getBudgetAsso(){
+        return this.gestAsso.getAssociation();
+    }
+    
+    @PostMapping
+    public Association createAssociation(@RequestBody Association association){
+        return this.gestAsso.createAssociation(association);
     }
 }
