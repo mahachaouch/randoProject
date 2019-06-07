@@ -5,7 +5,11 @@
  */
 package fr.miage.randomembre.metier;
 
+import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.entities.Membre;
+import fr.miage.randomembre.repositories.AssociationInterface;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -14,9 +18,20 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class GestionAssociation {
+    
+    @Autowired
+    private AssociationInterface associationInterface;
 
-    public Membre getAssociation(Long idAsso) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Association getAssociation() {
+        Optional<Association> assoReturn = this.associationInterface.findById((long) 1);
+        if (!assoReturn.isPresent()) {
+            //TODO exception 
+        }
+        return assoReturn.get();
+    }
+    
+     public Association createAssociation(Association association) {
+        return this.associationInterface.save(association);
     }
     
 }
