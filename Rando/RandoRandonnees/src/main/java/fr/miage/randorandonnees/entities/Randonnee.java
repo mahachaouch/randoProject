@@ -37,21 +37,21 @@ public class Randonnee implements Serializable{
     private List<Long> listInscris;
     private  Integer nbPlaces = 2;
     
-    private Date date1;
-    private Date date2;
-    private Date date3;
+    private String date1;
+    private String date2;
+    private String date3;
 
     public Integer getNbPlaces() {
         return nbPlaces;
     }
 
     //pour chaque date (key), on aura la list des id Membres ayant voté pour cette date
-    private HashMap<Date,ArrayList<Long>> votesR;
+    private HashMap<String,ArrayList<Long>> votesR;
 
     public Randonnee() {
     }
 
-    public Randonnee(String titreR, Integer niveauCible, Long idTeamLeader, String lieuR, String distanceR, Long coutFixeR, Long coutVariableR, Date date1, Date date2, Date date3) {
+    public Randonnee(String titreR, Integer niveauCible, Long idTeamLeader, String lieuR, String distanceR, Long coutFixeR, Long coutVariableR, String date1, String date2, String date3) {
         this.titreR = titreR;
         this.niveauCible = niveauCible;
         this.idTeamLeader = idTeamLeader;
@@ -67,12 +67,12 @@ public class Randonnee implements Serializable{
         this.inscriCloture = false;
         this.sondageCloture = false;
         this.listInscris = new ArrayList<Long>();
-        this.votesR = new HashMap<Date,ArrayList<Long>>();
-        /* this.votesR = new HashMap<Date,ArrayList<Long>>() {{
+       // this.votesR = new HashMap<String,ArrayList<Long>>();
+        this.votesR = new HashMap<String,ArrayList<Long>>() {{
         put(date1,new ArrayList<Long>());
         put(date2,new ArrayList<Long>());
         put(date3,new ArrayList<Long>());
-    }};*/
+    }};
         
     }
     public String getId() {
@@ -127,19 +127,19 @@ public class Randonnee implements Serializable{
         this.listInscris = listInscris;
     }
 
-    public void setDate1(Date date1) {
+    public void setDate1(String date1) {
         this.date1 = date1;
     }
 
-    public void setDate2(Date date2) {
+    public void setDate2(String date2) {
         this.date2 = date2;
     }
 
-    public void setDate3(Date date3) {
+    public void setDate3(String date3) {
         this.date3 = date3;
     }
 
-    public void setVotesR(HashMap<Date, ArrayList<Long>> votesR) {
+    public void setVotesR(HashMap<String, ArrayList<Long>> votesR) {
         this.votesR = votesR;
     }
 
@@ -191,19 +191,19 @@ public class Randonnee implements Serializable{
         return listInscris;
     }
 
-    public Date getDate1() {
+    public String getDate1() {
         return date1;
     }
 
-    public Date getDate2() {
+    public String getDate2() {
         return date2;
     }
 
-    public Date getDate3() {
+    public String getDate3() {
         return date3;
     }
 
-    public HashMap<Date, ArrayList<Long>> getVotesR() {
+    public HashMap<String, ArrayList<Long>> getVotesR() {
         return votesR;
     }
     

@@ -5,11 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.util.JSON;
 import fr.miage.randorandonnees.entities.Randonnee;
 import fr.miage.randorandonnees.metier.GestionRandonnee;
+import java.io.IOException;
 import static java.lang.Long.parseLong;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,44 +39,42 @@ public class RandonneeRestController {
     private GestionRandonnee gestRando;
 
     @GetMapping
-    public String getRandos(){
+    public String getRandos() {
         List<Randonnee> randos = this.gestRando.getAllRando();
-       // System.out.println(this.gestRando.convertDataToString( this.gestRando.getAllRando()));
+        // System.out.println(this.gestRando.convertDataToString( this.gestRando.getAllRando()));
         return this.gestRando.convertDataToString(randos);
     }
-    
+
     @GetMapping("/randoToVotes")
-    public String getRandosWithOpenVotes(){
+    public String getRandosWithOpenVotes() {
         List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
-            return this.gestRando.convertDataToString(randos);
+        return this.gestRando.convertDataToString(randos);
     }
-    
+
     @GetMapping("/randoInscriNonCloture")
-    public String getRandosInsciNonCloture(){
+    public String getRandosInsciNonCloture() {
         List<Randonnee> randos = this.gestRando.getRandoInscriNonCloture();
-            return this.gestRando.convertDataToString(randos);
+        return this.gestRando.convertDataToString(randos);
     }
-    
+
     @GetMapping("/{randoId}")
     public String getRandonnee(@PathVariable("randoId") String id) {
         //return this.gestRando.getRandoById(id).getNbPlaces();
         System.out.println(this.gestRando.getRandoById(id).toString());
         return this.gestRando.getRandoById(id).toString();
     }
-    
+
     //getRandoInscriNonCloture
-    
     @PostMapping
     public Randonnee creerRandonnee(@RequestBody Randonnee rando) {
         System.out.println(rando.getTitreR());
         return this.gestRando.createRando(rando);
     }
-    
-@PutMapping("/{randoId}")
+
+    @PutMapping("/{randoId}")
     public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando) {
         this.gestRando.majRando(id, rando);
     }
-   
 
     @PatchMapping("/cloturerVotes/{randoId}")
     public void cloturerVotes(@PathVariable("randoId") String id) {
@@ -85,17 +87,14 @@ public class RandonneeRestController {
     }
 
     @PatchMapping("/voterCreneau/{randoId}")
-    public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String participation, String dateChoisie) {
-        SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
-        try {
-            Date dateFormated = formater.parse(dateChoisie);
-            this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateFormated);
-        } catch (ParseException ex) {
-            Logger.getLogger(RandonneeRestController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String dateChoisie) throws IOException {
+        DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH);
+        LocalDate dateFormated = LocalDate.parse(dateChoisie, formater);
+        System.out.println(dateFormated);
+        this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateFormated);
     }
 
-  /*  @GetMapping
+    /*  @GetMapping
     public List<Randonnee> getRandoPassees() {
         return (List<Randonnee>) this.gestRando.getRandoPassees();
     }
