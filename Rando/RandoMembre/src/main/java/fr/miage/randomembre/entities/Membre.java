@@ -47,6 +47,11 @@ public class Membre implements Serializable{
     private Long assotId;
         
     public Membre() {
+        //params par défaut
+        this.isApte = false;
+        this.isPresident = false;
+        this.isSecretaire = false;
+        this.isTL = false;
     }
 
     public Membre(String nomM, String prenomM, String mailM, String loginM, String mdpM, String adressM, Integer licenceM, Date anneeCertificat, Date anneeCotisation, Long cotisationM, String ibanM, Integer niveauM) {
