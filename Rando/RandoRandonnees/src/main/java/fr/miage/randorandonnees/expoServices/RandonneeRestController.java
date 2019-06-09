@@ -53,12 +53,14 @@ public class RandonneeRestController {
         List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
+   
     
-   /*     @GetMapping("/randoToVotes/{}")
-    public String getRandosWithOpenVotes() {
-        List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
+    @CrossOrigin
+    @GetMapping("/randoToVotes/{idMembre}")
+    public String getRandosWithOpenVotes(@PathVariable("idMembre") String id) {
+        List<Randonnee> randos = this.gestRando.getRandoVotesNonClotureNonVoteParMembre(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
-    } */
+    } 
 
     @CrossOrigin
     @GetMapping("/randoInscriNonCloture")
@@ -104,10 +106,10 @@ public class RandonneeRestController {
     @CrossOrigin
     @PatchMapping("/voterCreneau/{randoId}")
     public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String dateChoisie) throws IOException {
-        DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH);
-        LocalDate dateFormated = LocalDate.parse(dateChoisie, formater);
-        System.out.println(dateFormated);
-        this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateFormated);
+        //DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH);
+        //LocalDate dateFormated = LocalDate.parse(dateChoisie, formater);
+        System.out.println(dateChoisie);
+        this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateChoisie);
     }
 
     /*  @GetMapping

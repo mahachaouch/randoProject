@@ -158,30 +158,30 @@ public class GestionRandonnee {
         return null;
     }
 
-    public void voterCreneau(String idRando, long idMembre, LocalDate dateChoisie) throws IOException {
+    public void voterCreneau(String idRando, long idMembre, String dateChoisie) throws IOException {
 
         //chercher la rando
         Optional<Randonnee> randoReturn = this.randoInterface.findById(idRando);
-       
+
         if (randoReturn.isPresent()) {
 
             //vérifier que le membre existe
             RestTemplate restTemplate = new RestTemplate();
             String fooResourceUrl = "http://localhost:8080/api/randoMembre/";
-            ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idMembre , String.class);
-           
+            ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idMembre, String.class);
+
             System.out.println(response.getBody());
             //vérifier le code réponse : si il est égale à  200 OK
             Boolean memberExist = response.getStatusCode().equals(HttpStatus.OK);
-            
+
             Randonnee rando = randoReturn.get();
             HashMap votes = rando.getVotesR();
 
             //verifier si la date envoyée est bien dans les propositions + le sondage n est pas cloturé
-            if (memberExist && votes.containsKey(dateChoisie.toString()) && !rando.getSondageCloture()) {
+            if (memberExist && votes.containsKey(dateChoisie) && !rando.getSondageCloture()) {
 
                 //ajouter l id du membre dans la liste correspendante
-                ArrayList<Long> listM = (ArrayList<Long>) votes.get(dateChoisie.toString());
+                ArrayList<Long> listM = (ArrayList<Long>) votes.get(dateChoisie);
 
                 listM.add(idMembre);
                 randoInterface.save(rando);
@@ -245,22 +245,37 @@ public class GestionRandonnee {
     public List<Randonnee> getRandoVoteNonCloture() {
         return this.randoInterface.findBySondageCloture(false);
     }
-    
+
     //renvoie les randonnees dont le vote n est pas cloturé et aux quelles, le membre n'a pas encore voté
-    public List<Randonnee> getRandoVotesNonClotureNonVoteParMembre(Long idMembre){
+    public List<Randonnee> getRandoVotesNonClotureNonVoteParMembre(Long idMembre) {
         List<Randonnee> allRandoWithOpenVotes = this.randoInterface.findBySondageCloture(false);
         List<Randonnee> randosToReturn = new ArrayList<Randonnee>();
-       
-        for(int i=0;i <allRandoWithOpenVotes.size();i++){
+
+        for (int i = 0; i < allRandoWithOpenVotes.size(); i++) {
             HashMap votes = allRandoWithOpenVotes.get(i).getVotesR();
-             Iterator it = votes.entrySet().iterator();
-              while (it.hasNext()) {
-        HashMap.Entry pair = (HashMap.Entry)it.next();
-        System.out.println(pair.getKey() + " = " + pair.getValue());
-        it.remove(); // avoids a ConcurrentModificationException
-    }
+            Iterator it = votes.entrySet().iterator();
+
+            //parcourir les votes de chaques rando: chaque ligne dans la map sera appele vote = <date, arrayList<idMember>>
+            Boolean exist = false;
+            while (it.hasNext() && !exist) {
+                HashMap.Entry vote = (HashMap.Entry) it.next();
+               // System.out.println(vote.getKey() + " = " + vote.getValue());
+                ArrayList<Long> idMembers = (ArrayList<Long>) vote.getValue();
+
+                //vérifier si l id du membre existe dans une des 3 liste de votes
+                if (idMembers.contains(idMembre)) {
+                    exist = true;
+                }
+                it.remove(); 
+            }
+            //ajouter la rando à laquelle le membre n a pas voté
+            if (!exist) {
+                System.out.println("rando to return"+i);
+                randosToReturn.add(allRandoWithOpenVotes.get(i));
+            }
+            System.out.println(i);
         }
-        
-    return randosToReturn;
+        System.out.println("final return" + randosToReturn.toString());
+        return randosToReturn;
     }
 }
