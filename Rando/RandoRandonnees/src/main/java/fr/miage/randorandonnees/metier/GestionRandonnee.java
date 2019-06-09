@@ -195,18 +195,30 @@ public class GestionRandonnee {
     //inscription d un membre à une rando
     public void inscriptionRando(String idRando, long idMembre) {
         //chercher la rando
-        Randonnee randoReturn = this.randoInterface.findById(idRando).get();
 
+        Optional<Randonnee> randoReturn = this.randoInterface.findById(idRando);
+
+        //vérifier que le membre existe
+            RestTemplate restTemplate = new RestTemplate();
+            String fooResourceUrl = "http://localhost:8080/api/randoMembre/";
+            ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idMembre, String.class);
+
+            //vérifier le code réponse : si il est égale à  200 OK
+            Boolean memberExist = response.getStatusCode().equals(HttpStatus.OK);
+            
         //il faut chercher coté angular le membre via API => vérifier si il a le niveau requis
-        if (randoReturn != null) {
-
+        if (randoReturn.isPresent()) {
+            Randonnee rando = randoReturn.get();
             //vérifier que les votes sont cloturés et que l'inscription est encore ouverte et qu il reste des places
-            if (!randoReturn.getInscriCloture() && randoReturn.getSondageCloture() && !randoReturn.isOverBooked()) {
-                randoReturn.ajouterMembreInscri(idMembre);
+            if (!rando.getInscriCloture() && !rando.getSondageCloture() && !rando.isOverBooked() && memberExist) {
+                
+                rando.ajouterMembreInscri(idMembre);
 
                 //màj rando
-                randoInterface.save(randoReturn);
+                randoInterface.save(rando);
             }
+        }else{
+            System.out.println("rando not found");
         }
     }
 
@@ -259,23 +271,23 @@ public class GestionRandonnee {
             Boolean exist = false;
             while (it.hasNext() && !exist) {
                 HashMap.Entry vote = (HashMap.Entry) it.next();
-               // System.out.println(vote.getKey() + " = " + vote.getValue());
+                // System.out.println(vote.getKey() + " = " + vote.getValue());
                 ArrayList<Long> idMembers = (ArrayList<Long>) vote.getValue();
 
                 //vérifier si l id du membre existe dans une des 3 liste de votes
                 if (idMembers.contains(idMembre)) {
                     exist = true;
                 }
-                it.remove(); 
+                it.remove();
             }
             //ajouter la rando à laquelle le membre n a pas voté
             if (!exist) {
-                System.out.println("rando to return"+i);
+                //System.out.println("rando to return"+i);
                 randosToReturn.add(allRandoWithOpenVotes.get(i));
             }
-            System.out.println(i);
+
         }
-        System.out.println("final return" + randosToReturn.toString());
+        // System.out.println("final return" + randosToReturn.toString());
         return randosToReturn;
     }
 }

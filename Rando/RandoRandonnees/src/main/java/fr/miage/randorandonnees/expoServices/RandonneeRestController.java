@@ -111,6 +111,12 @@ public class RandonneeRestController {
         System.out.println(dateChoisie);
         this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateChoisie);
     }
+    
+    @CrossOrigin
+    @PatchMapping("/inscriptionRando/{randoId}")
+    public void inscriptionRando(@PathVariable("randoId") String idRando, String idMembre)  {
+                this.gestRando.inscriptionRando(idRando, Long.parseLong(idMembre));
+    }
 
     /*  @GetMapping
     public List<Randonnee> getRandoPassees() {
