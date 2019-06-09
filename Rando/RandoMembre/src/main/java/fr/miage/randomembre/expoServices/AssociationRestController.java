@@ -8,6 +8,7 @@ package fr.miage.randomembre.expoServices;
 import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.metier.GestionAssociation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,11 +27,13 @@ public class AssociationRestController {
     @Autowired
     private GestionAssociation gestAsso;
     
+    @CrossOrigin
     @GetMapping
     public Association  getBudgetAsso(){
         return this.gestAsso.getAssociation();
     }
     
+    @CrossOrigin
     @PostMapping
     public Association createAssociation(@RequestBody Association association){
         return this.gestAsso.createAssociation(association);

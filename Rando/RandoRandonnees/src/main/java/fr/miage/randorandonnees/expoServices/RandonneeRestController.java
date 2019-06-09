@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ public class RandonneeRestController {
     @Autowired
     private GestionRandonnee gestRando;
 
+    @CrossOrigin
     @GetMapping
     public String getRandos() {
         List<Randonnee> randos = this.gestRando.getAllRando();
@@ -45,6 +47,7 @@ public class RandonneeRestController {
         return this.gestRando.convertDataToString(randos);
     }
 
+    @CrossOrigin
     @GetMapping("/randoToVotes")
     public String getRandosWithOpenVotes() {
         List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
@@ -57,12 +60,14 @@ public class RandonneeRestController {
         return this.gestRando.convertDataToString(randos);
     } */
 
+    @CrossOrigin
     @GetMapping("/randoInscriNonCloture")
     public String getRandosInsciNonCloture() {
         List<Randonnee> randos = this.gestRando.getRandoInscriNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
 
+    @CrossOrigin
     @GetMapping("/{randoId}")
     public String getRandonnee(@PathVariable("randoId") String id) {
         //return this.gestRando.getRandoById(id).getNbPlaces();
@@ -71,27 +76,32 @@ public class RandonneeRestController {
     }
 
     //getRandoInscriNonCloture
+    @CrossOrigin
     @PostMapping
     public Randonnee creerRandonnee(@RequestBody Randonnee rando) {
         System.out.println(rando.getTitreR());
         return this.gestRando.createRando(rando);
     }
 
+    @CrossOrigin
     @PutMapping("/{randoId}")
     public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando) {
         this.gestRando.majRando(id, rando);
     }
 
+    @CrossOrigin
     @PatchMapping("/cloturerVotes/{randoId}")
     public void cloturerVotes(@PathVariable("randoId") String id) {
         this.gestRando.cloturerVotes(id);
     }
 
+    @CrossOrigin
     @PatchMapping("/cloturerInscription/{randoId}")
     public void cloturerInscription(@PathVariable("randoId") String id) {
         this.gestRando.cloturerInscription(id);
     }
 
+    @CrossOrigin
     @PatchMapping("/voterCreneau/{randoId}")
     public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String dateChoisie) throws IOException {
         DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH);
