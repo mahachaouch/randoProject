@@ -68,6 +68,13 @@ public class RandonneeRestController {
         List<Randonnee> randos = this.gestRando.getRandoInscriNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
+    
+    @CrossOrigin
+    @GetMapping("/randoInscriNonCloture/{idMembre}")
+    public String getRandosInsciNonClotureForAspecificMember(@PathVariable("idMembre") String id) throws IOException {
+        List<Randonnee> randos = this.gestRando.getRandoInscriNonCloturePourUnMembre(Long.parseLong(id));
+        return this.gestRando.convertDataToString(randos);
+    }
 
     @CrossOrigin
     @GetMapping("/{randoId}")
@@ -106,9 +113,6 @@ public class RandonneeRestController {
     @CrossOrigin
     @PatchMapping("/voterCreneau/{randoId}")
     public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String dateChoisie) throws IOException {
-        //DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH);
-        //LocalDate dateFormated = LocalDate.parse(dateChoisie, formater);
-        System.out.println(dateChoisie);
         this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateChoisie);
     }
     

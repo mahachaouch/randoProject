@@ -199,27 +199,66 @@ public class GestionRandonnee {
         Optional<Randonnee> randoReturn = this.randoInterface.findById(idRando);
 
         //vérifier que le membre existe
-            RestTemplate restTemplate = new RestTemplate();
-            String fooResourceUrl = "http://localhost:8080/api/randoMembre/";
-            ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idMembre, String.class);
+        RestTemplate restTemplate = new RestTemplate();
+        String fooResourceUrl = "http://localhost:8080/api/randoMembre/";
+        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idMembre, String.class);
 
-            //vérifier le code réponse : si il est égale à  200 OK
-            Boolean memberExist = response.getStatusCode().equals(HttpStatus.OK);
-            
+        //vérifier le code réponse : si il est égale à  200 OK
+        Boolean memberExist = response.getStatusCode().equals(HttpStatus.OK);
+
         //il faut chercher coté angular le membre via API => vérifier si il a le niveau requis
         if (randoReturn.isPresent()) {
             Randonnee rando = randoReturn.get();
             //vérifier que les votes sont cloturés et que l'inscription est encore ouverte et qu il reste des places
             if (!rando.getInscriCloture() && !rando.getSondageCloture() && !rando.isOverBooked() && memberExist) {
-                
+
                 rando.ajouterMembreInscri(idMembre);
 
                 //màj rando
                 randoInterface.save(rando);
             }
-        }else{
+        } else {
             System.out.println("rando not found");
         }
+    }
+
+    //renvoie la list des randos aux quelles le membre ne s est pas inscri
+    public List<Randonnee> getRandoInscriNonCloturePourUnMembre(Long idMembre) throws IOException {
+
+        //vérifier que le membre existe
+        RestTemplate restTemplate = new RestTemplate();
+        String fooResourceUrl = "http://localhost:8080/api/randoMembre/";
+        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idMembre, String.class);
+
+        //vérifier le code réponse : si il est égale à  200 OK
+        Boolean memberExist = response.getStatusCode().equals(HttpStatus.OK);
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(response.getBody());
+        JsonNode isApte = root.path("isApte");
+
+        List<Randonnee> randosToReturn = new ArrayList<Randonnee>();
+
+        //vérifier si le membre est apte avant de s inscrire
+        if (isApte.asBoolean()) {
+
+            List<Randonnee> randosInscisOuvertes = this.randoInterface.findByInscriCloture(false);
+
+            for (int i = 0; i < randosInscisOuvertes.size(); i++) {
+                Randonnee rando = randosInscisOuvertes.get(i);
+                List<Long> idInscrits = rando.getListInscris();
+                //vérifier s il reste des places dispo pour la rando
+
+                if (!rando.isOverBooked()) {
+                    //ajouter la rando à laquelle le membre ne s'es pas inscrit
+                    if (!idInscrits.contains(idMembre)) {
+                        //System.out.println("rando to return"+i);
+                        randosToReturn.add(randosInscisOuvertes.get(i));
+                    }
+                }
+            }
+        }
+        return randosToReturn;
     }
 
     public List<Randonnee> getRandoPassees() {
@@ -246,7 +285,9 @@ public class GestionRandonnee {
         for (int i = 0; i < randos.size(); i++) {
             result += (String) randos.get(i).toString() + ",";
         }
-        result = result.substring(0, result.length() - 1);
+        if (randos.size() > 0) {
+            result = result.substring(0, result.length() - 1);
+        }
         return result + "]";
     }
 
