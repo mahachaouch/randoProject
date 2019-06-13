@@ -21,5 +21,6 @@ public interface RandonneeInterface  extends MongoRepository<Randonnee,String> {
      List<Randonnee> findByInscriCloture(Boolean cloture);
      List<Randonnee> findBySondageCloture(Boolean cloture);
      List<Randonnee> findByIdTeamLeaderAndSondageCloture(Long idTL, Boolean Cloture);
+     List<Randonnee> findByIdTeamLeaderAndInscriCloture(Long idTL, Boolean Cloture);
     
 }
