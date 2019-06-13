@@ -295,6 +295,10 @@ public class GestionRandonnee {
         return this.randoInterface.findByInscriCloture(false);
     }
 
+        public List<Randonnee> getRandoVotesNonClotureCréeParUnTL(Long idTL) {
+        return this.randoInterface.findByIdTeamLeaderAndSondageCloture(idTL, false);
+    }
+        
     public List<Randonnee> getRandoVoteNonCloture() {
         return this.randoInterface.findBySondageCloture(false);
     }
