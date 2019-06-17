@@ -119,7 +119,7 @@ public class GestionRandonnee {
         */
         
         Randonnee initRando = new Randonnee(rando.getTitreR(), rando.getNiveauCible(), rando.getIdTeamLeader(), rando.getLieuR(), rando.getDistanceR(), rando.getCoutFixeR(), rando.getCoutVariableR(), rando.getDate1(), rando.getDate2(), rando.getDate3());
-        System.out.println(initRando.toString());
+        //System.out.println(initRando.toString());
         return this.randoInterface.save(initRando);
     }
 
@@ -167,18 +167,52 @@ public class GestionRandonnee {
         DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH);
 
         if (randoReturn != null) {
-            //cloturer les votes
+            //cloturer les votes et les inscris
             randoReturn.setInscriCloture(true);
+            randoReturn.setSondageCloture(true);
 
             //fixer la date de la rando selon les votes
-            LocalDate dateFormated = LocalDate.parse(dateApresVotes(randoReturn), formater);
-            Date date = Date.from(dateFormated.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            randoReturn.setDateRando(date);
-
+            String dateElue = dateApresVotes(randoReturn);
+            System.out.println("date elue: "+ dateApresVotes(randoReturn));            
+            randoReturn.setDateRando(dateElue);
+            
+            //affacter toute personne ayant voté pour la date "finale" de la rando après cloture
+            inscrireVoteurs(randoReturn);
+            
+            //inscrire automatiquement le TL
+            List<Long> idInscris = randoReturn.getListInscris();
+            if(!idInscris.contains(randoReturn.getIdTeamLeader())){
+                idInscris.add(randoReturn.getIdTeamLeader());
+            }
+            
+            //màj le budget de l'association
+            //TODO
+            
             //màj de la rando
             randoInterface.save(randoReturn);
         }
     }
+    
+    public void inscrireVoteurs(Randonnee rando){
+            HashMap votes = rando.getVotesR();
+           
+            ArrayList<Long> idVoteurs =  (ArrayList<Long>) votes.get(rando.getDateRando());            
+            List<Long> idInscris = rando.getListInscris();
+            
+            for (int i=0; i< idVoteurs.size();i++){
+                
+                //vérifier si le membre qui a voté n'est pas déja inscri
+                Long idVoteur = idVoteurs.get(i);
+                if(!idInscris.contains(idVoteur)){
+                    //ajouter le membre à la liste des inscris
+                    idInscris.add(idVoteur);
+                }
+            }  
+    }
+    
+    public void modifierBudgetAssociation(){
+        
+    } 
 
     //détermine la date qui a gagné les votes du sondage
     public String dateApresVotes(Randonnee r) {
@@ -287,7 +321,7 @@ public class GestionRandonnee {
         //vérifier si le membre est apte avant de s inscrire
         if (isApte.asBoolean()) {
 
-            List<Randonnee> randosInscisOuvertes = this.randoInterface.findByInscriCloture(false);
+            List<Randonnee> randosInscisOuvertes = this.randoInterface.findByInscriClotureAndSondageCloture(false,true);
 
             for (int i = 0; i < randosInscisOuvertes.size(); i++) {
                 Randonnee rando = randosInscisOuvertes.get(i);
@@ -306,7 +340,7 @@ public class GestionRandonnee {
         return randosToReturn;
     }
 
-    public List<Randonnee> getRandoPassees() {
+ /*   public List<Randonnee> getRandoPassees() {
         List<Randonnee> randoFinished = new ArrayList<Randonnee>();
         List<Randonnee> randoReturn = this.randoInterface.findAll();
 
@@ -318,7 +352,7 @@ public class GestionRandonnee {
             }
         }
         return randoFinished;
-    }
+    } */
 
     public List<Randonnee> getCouTotalRandos() {
         //TO DO
@@ -338,7 +372,7 @@ public class GestionRandonnee {
 
     public List<Randonnee> getRandoInscriNonCloture() {
         return this.randoInterface.findByInscriCloture(false);
-    }
+    } 
 
         public List<Randonnee> getRandoVotesNonClotureCréeParUnTL(Long idTL) {
         return this.randoInterface.findByIdTeamLeaderAndSondageCloture(idTL, false);
