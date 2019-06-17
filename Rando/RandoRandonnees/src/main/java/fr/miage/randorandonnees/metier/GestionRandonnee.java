@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.management.Query;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -60,19 +62,62 @@ public class GestionRandonnee {
         Date today = new Date();
         Boolean datesValides = rando.getDate1().equals(today) && rando.getDate2().equals(today) && rando.getDate3().equals(today);
 
+         
         //organisateur apte : vérifier que la personne qui veut créer la rando est un organisateur + il a un niveau 1,5 ...
-        //coté angular
-        //vérifier cout
-        // return this.randoInterface.save(rando);
-        /* if (datesValides) {
-            Randonnee initRando = new Randonnee(rando.getTitreR(),rando.getNiveauCible(),rando.getIdTeamLeader(),rando.getLieuR(),rando.getDistanceR(),rando.getCoutFixeR(),rando.getCoutVariableR(),rando.getDate1(),rando.getDate2(),rando.getDate3());
-            System.out.println(initRando.toString());
-            return this.randoInterface.save(initRando);
-            
-          //  return this.randoInterface.save(rando);
-        } else {
+        Long idTL = rando.getIdTeamLeader();
+        int niveauTL = 0;
+        int  niveauRando = rando.getNiveauCible();
+        RestTemplate restTemplate = new RestTemplate();
+        String fooResourceUrl = "http://localhost:8080/api/randoMembre/";
+        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idTL, String.class);
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root;
+        try {
+            root = mapper.readTree(response.getBody());
+            JsonNode niveauM = root.path("niveauM");
+            System.out.println(niveauM.asText());
+            niveauTL = Integer.parseInt(niveauM.asText());
+        } catch (IOException ex) {
+            Logger.getLogger(GestionRandonnee.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (niveauRando >= niveauTL){
             return null;
-        }*/
+        } 
+            
+       
+        //verif cout
+        float budgetAssociation = 0;
+        float budgetRando = rando.getCoutFixeR();
+        
+        RestTemplate restTemplate2 = new RestTemplate();
+        String fooResourceUrl2 = "http://localhost:8080/api/randoAsso";
+        ResponseEntity<String> response2 = restTemplate2.getForEntity(fooResourceUrl2, String.class);
+
+        
+        ObjectMapper mapper2 = new ObjectMapper();
+        JsonNode root2;
+        try {
+            root2 = mapper2.readTree(response2.getBody());
+            JsonNode budgetAsso = root2.path("budgetAsso");
+            System.out.println(Float.parseFloat(budgetAsso.asText()));
+            budgetAssociation = Float.parseFloat(budgetAsso.asText());
+        } catch (IOException ex) {
+            Logger.getLogger(GestionRandonnee.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (budgetAssociation < budgetRando){
+            return null;
+        }
+        
+        /*
+        //actualiser tresorerie
+        RestTemplate restTemplate3 = new RestTemplate();
+        String fooResourceUrl3 = "http://localhost:8080/api/randoAsso/financerRando?cout="+rando.getCoutFixeR();
+        ResponseEntity<String> response3 = restTemplate3.getForEntity(fooResourceUrl3, String.class);
+        */
+        
         Randonnee initRando = new Randonnee(rando.getTitreR(), rando.getNiveauCible(), rando.getIdTeamLeader(), rando.getLieuR(), rando.getDistanceR(), rando.getCoutFixeR(), rando.getCoutVariableR(), rando.getDate1(), rando.getDate2(), rando.getDate3());
         System.out.println(initRando.toString());
         return this.randoInterface.save(initRando);

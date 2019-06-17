@@ -33,5 +33,15 @@ public class GestionAssociation {
      public Association createAssociation(Association association) {
         return this.associationInterface.save(association);
     }
+     
+     public void financerRando(float cout) {
+        Optional<Association> assoReturn = this.associationInterface.findById((long) 1);
+        if (!assoReturn.isPresent()) {
+            //TODO exception 
+        }
+        Association a = assoReturn.get();
+        a.setBudgetAsso(a.getBudgetAsso() - cout);
+        this.associationInterface.save(a);
+    }
     
 }
