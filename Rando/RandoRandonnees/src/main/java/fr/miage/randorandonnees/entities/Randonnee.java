@@ -26,7 +26,7 @@ public class Randonnee implements Serializable{
     
     private String titreR;
     private Integer niveauCible;
-    private Date dateRando;
+    private String dateRando;
     private Long idTeamLeader ;
     private String lieuR;
     private String distanceR;
@@ -91,7 +91,7 @@ public class Randonnee implements Serializable{
         this.niveauCible = niveauCible;
     }
 
-    public void setDateRando(Date dateRando) {
+    public void setDateRando(String dateRando) {
         this.dateRando = dateRando;
     }
 
@@ -155,7 +155,7 @@ public class Randonnee implements Serializable{
         return niveauCible;
     }
 
-    public Date getDateRando() {
+    public String getDateRando() {
         return dateRando;
     }
 
