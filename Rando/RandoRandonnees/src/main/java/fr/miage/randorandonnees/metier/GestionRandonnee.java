@@ -384,4 +384,24 @@ public class GestionRandonnee {
         // System.out.println("final return" + randosToReturn.toString());
         return randosToReturn;
     }
+
+    public String reporting() {
+        List<Randonnee> listRandonnee = (List<Randonnee>) randoInterface.findAll();
+        float totalcoutrando = 0;
+        float encour = 0;
+        int nbRandoPos = 0;
+        for (Randonnee randonnee : listRandonnee) {
+            totalcoutrando += randonnee.getCoutFixeR();
+            int nbparticipant = randonnee.getListInscris().size();
+            float coutvar = randonnee.getCoutVariableR();
+            totalcoutrando += nbparticipant*coutvar;
+            
+            if (randonnee.getDateRando() != null) {
+                nbRandoPos++;
+            } else {
+                encour += randonnee.getCoutFixeR();
+            }
+        }
+        return "{\"totalCoutRando\" : \""+totalcoutrando+"\", \"nbRandoPos\" : \""+nbRandoPos+"\", \"encour\" : \""+encour+"\"  }";
+    }
 }

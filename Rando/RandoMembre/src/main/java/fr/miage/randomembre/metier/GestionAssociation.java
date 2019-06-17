@@ -31,6 +31,7 @@ public class GestionAssociation {
     }
     
      public Association createAssociation(Association association) {
+         
         return this.associationInterface.save(association);
     }
      
@@ -43,5 +44,16 @@ public class GestionAssociation {
         a.setBudgetAsso(a.getBudgetAsso() - cout);
         this.associationInterface.save(a);
     }
+
+    public String reporting() {
+        Optional<Association> assoReturn = this.associationInterface.findById((long) 1);
+        if (!assoReturn.isPresent()) {
+            //TODO exception 
+        }
+        Association a = assoReturn.get();
+        return "{\"cotisationMin\" : \""+a.getCotisationMin()+"\"}";
+    }
+     
+     
     
 }
