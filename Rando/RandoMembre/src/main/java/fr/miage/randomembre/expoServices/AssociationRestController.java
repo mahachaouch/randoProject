@@ -47,4 +47,10 @@ public class AssociationRestController {
         float coutR = Float.parseFloat(cout);
         this.gestAsso.financerRando(coutR);
     }
+    
+    @CrossOrigin
+    @GetMapping("/reporting")
+    public String reporting(){
+        return this.gestAsso.reporting();
+    }
 }

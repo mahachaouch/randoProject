@@ -134,6 +134,12 @@ public class RandonneeRestController {
     public void inscriptionRando(@PathVariable("randoId") String idRando, String idMembre) {
         this.gestRando.inscriptionRando(idRando, Long.parseLong(idMembre));
     }
+    
+    @CrossOrigin
+    @GetMapping("/reporting")
+    public String reporting(){
+        return this.gestRando.reporting();
+    }
 
     /*  @GetMapping
     public List<Randonnee> getRandoPassees() {
