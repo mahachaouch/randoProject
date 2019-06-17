@@ -53,14 +53,13 @@ public class RandonneeRestController {
         List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
-   
-    
+
     @CrossOrigin
     @GetMapping("/randoToVotes/{idMembre}")
     public String getRandosWithOpenVotes(@PathVariable("idMembre") String id) {
         List<Randonnee> randos = this.gestRando.getRandoVotesNonClotureNonVoteParMembre(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
-    } 
+    }
 
     @CrossOrigin
     @GetMapping("/randoInscriNonCloture")
@@ -68,28 +67,27 @@ public class RandonneeRestController {
         List<Randonnee> randos = this.gestRando.getRandoInscriNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
-    
+
     @CrossOrigin
     @GetMapping("/randoInscriNonCloture/{idMembre}")
     public String getRandosInsciNonClotureForAspecificMember(@PathVariable("idMembre") String id) throws IOException {
         List<Randonnee> randos = this.gestRando.getRandoInscriNonCloturePourUnMembre(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
     }
-    
+
     @CrossOrigin
     @GetMapping("/randoVotesACloturer/{idTL}")
-    public String test(@PathVariable("idTL") String id) throws IOException {
+    public String getRandoAcloturerVotes(@PathVariable("idTL") String id) throws IOException {
         List<Randonnee> randos = this.gestRando.getRandoVotesNonClotureCréeParUnTL(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
     }
-    
-    
-          @CrossOrigin
+
+    @CrossOrigin
     @GetMapping("/randoInscisACloturer/{idTL}")
     public String getRandoAcloturerInscris(@PathVariable("idTL") String id) throws IOException {
         List<Randonnee> randos = this.gestRando.getRandoInsciNonClotureCréeParUnTL(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
-    }      
+    }
 
     @CrossOrigin
     @GetMapping("/{randoId}")
@@ -130,11 +128,11 @@ public class RandonneeRestController {
     public void voterCreneau(@PathVariable("randoId") String idRando, String idMembre, String dateChoisie) throws IOException {
         this.gestRando.voterCreneau(idRando, Long.parseLong(idMembre), dateChoisie);
     }
-    
+
     @CrossOrigin
     @PatchMapping("/inscriptionRando/{randoId}")
-    public void inscriptionRando(@PathVariable("randoId") String idRando, String idMembre)  {
-                this.gestRando.inscriptionRando(idRando, Long.parseLong(idMembre));
+    public void inscriptionRando(@PathVariable("randoId") String idRando, String idMembre) {
+        this.gestRando.inscriptionRando(idRando, Long.parseLong(idMembre));
     }
 
     /*  @GetMapping
