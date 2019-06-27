@@ -108,12 +108,7 @@ public class GestionRandonnee {
             return null;
         }
 
-        /*
-        //actualiser tresorerie
-        RestTemplate restTemplate3 = new RestTemplate();
-        String fooResourceUrl3 = "http://localhost:8080/api/randoAsso/financerRando?cout="+rando.getCoutFixeR();
-        ResponseEntity<String> response3 = restTemplate3.getForEntity(fooResourceUrl3, String.class);
-         */
+        
         Randonnee initRando = new Randonnee(rando.getTitreR(), rando.getNiveauCible(), rando.getIdTeamLeader(), rando.getLieuR(), rando.getDistanceR(), rando.getCoutFixeR(), rando.getCoutVariableR(), rando.getDate1(), rando.getDate2(), rando.getDate3());
         //System.out.println(initRando.toString());
         return this.randoInterface.save(initRando);

@@ -42,7 +42,7 @@ public class AssociationRestController {
     }
     
     @CrossOrigin
-    @PatchMapping("/financerRando")
+    @GetMapping("/financerRando")
     public void financerRando(@RequestParam("cout") String cout){
         float coutR = Float.parseFloat(cout);
         this.gestAsso.financerRando(coutR);
