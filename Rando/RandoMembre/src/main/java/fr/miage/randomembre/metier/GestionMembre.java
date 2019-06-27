@@ -63,6 +63,10 @@ public class GestionMembre {
     }
 
     public Membre createMembre(Membre membre) {
+        Optional<Membre> membreReturn = this.membreInterface.findByLoginM(membre.getLoginM());
+        if (membreReturn.isPresent()) {
+            throw new InvalidParameterException("login deja pris ");
+        }
         if (membre.getLoginM() == "" || membre.getMdpM() == ""){
             throw new InvalidParameterException("les login et mdp deuvent etre dif de vide ");
         }

@@ -26,5 +26,7 @@ public interface MembreInterface extends CrudRepository<Membre,Long>{
     
     @Query("SELECT m FROM Membre m WHERE m.loginM = ?1 and m.mdpM = ?2")
     public Optional<Membre> findMembreByLoginMAndMdpM(String loginM, String mdpM);
+
+    public Optional<Membre> findByLoginM(String loginM);
     
 }

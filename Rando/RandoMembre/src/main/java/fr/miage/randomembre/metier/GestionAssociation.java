@@ -14,16 +14,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-/**
- *
- * @author Maha
- */
 @Controller
 public class GestionAssociation {
     
     @Autowired
     private AssociationInterface associationInterface;
 
+    //retourne l'association stocké dans le repo
     public Association getAssociation() {
         List<Association> listAssos = (List<Association>) associationInterface.findAll();
         if (listAssos.size() != 0){
@@ -34,6 +31,11 @@ public class GestionAssociation {
         
     }
     
+    /**
+     * creer l'association dans le repo si celui-ci est vide et retourne l'association créé
+     * @param association
+     * @return 
+     */
      public Association createAssociation(Association association) {
         List<Association> listAssos = (List<Association>) associationInterface.findAll();
         if (listAssos.size() == 0){
@@ -49,6 +51,10 @@ public class GestionAssociation {
         }
     }
      
+     /**
+      * retire budget de l'association de cout passé en parametre
+      * @param cout 
+      */
      public void financerRando(float cout) {
         if (cout < 0){
                 throw new InvalidParameterException("cout rando doit etre > 0 ");
