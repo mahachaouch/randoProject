@@ -51,7 +51,7 @@ public class GestionAssociation {
             
             return this.associationInterface.save(association);
         }else{
-            return null;
+            throw new InvalidParameterException("asso déjà créé");
         }
     }
      
