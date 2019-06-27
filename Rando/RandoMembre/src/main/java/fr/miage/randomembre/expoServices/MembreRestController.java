@@ -7,13 +7,18 @@ package fr.miage.randomembre.expoServices;
 
 import fr.miage.randomembre.entities.Membre;
 import fr.miage.randomembre.metier.GestionMembre;
+import java.security.InvalidParameterException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -107,5 +112,9 @@ public class MembreRestController {
         return this.gestMembre.connexion(loginM,mdpM);
     }
     
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<String> invalidParam(HttpServletRequest requete, NumberFormatException ex) {
+        return new ResponseEntity<>("paramètre(s) invalide(s)", HttpStatus.UNPROCESSABLE_ENTITY);
+    }
     
 }

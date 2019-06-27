@@ -8,6 +8,7 @@ package fr.miage.randomembre.metier;
 import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.entities.Membre;
 import fr.miage.randomembre.repositories.AssociationInterface;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,12 @@ public class GestionAssociation {
      public Association createAssociation(Association association) {
         List<Association> listAssos = (List<Association>) associationInterface.findAll();
         if (listAssos.size() == 0){
+            
+            if (association.getBudgetAsso()<0 || association.getCotisationMin()<0 || association.getNomAsso() == ""){
+                    throw new InvalidParameterException("asso param >= 0 et nom dif de rien");
+            }
+            
+            
             return this.associationInterface.save(association);
         }else{
             return null;
@@ -43,6 +50,9 @@ public class GestionAssociation {
     }
      
      public void financerRando(float cout) {
+        if (cout < 0){
+                throw new InvalidParameterException("cout rando doit etre > 0 ");
+        }
          List<Association> listAssos = (List<Association>) associationInterface.findAll();
         if (listAssos.size() != 0){
             Association a = listAssos.get(0);

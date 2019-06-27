@@ -9,6 +9,7 @@ import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.entities.Membre;
 import fr.miage.randomembre.repositories.AssociationInterface;
 import fr.miage.randomembre.repositories.MembreInterface;
+import java.security.InvalidParameterException;
 import java.util.Calendar;
 import static java.util.Calendar.YEAR;
 import java.util.Date;
@@ -38,7 +39,7 @@ public class GestionMembre {
     public Membre getMembre(Long id) {
         Optional<Membre> membreReturn = this.membreInterface.findById(id);
         if (!membreReturn.isPresent()) {
-            //TODO exception 
+            throw new InvalidParameterException("l'id fournis ne corrspond à aucun membre ");
         }
         return membreReturn.get();
     }
@@ -56,12 +57,15 @@ public class GestionMembre {
                 membreReturn = this.membreInterface.findByIsSecretaireIsTrue();
                 break;
             default:
-            //TODO exception 
+                throw new InvalidParameterException("le type fournis n'existe pas (TL,President,Secretaire");
         }
         return (List<Membre>) membreReturn.get();
     }
 
     public Membre createMembre(Membre membre) {
+        if (membre.getLoginM() == "" || membre.getMdpM() == ""){
+            throw new InvalidParameterException("les login et mdp deuvent etre dif de vide ");
+        }
         return this.membreInterface.save(membre);
     }
 
@@ -69,18 +73,15 @@ public class GestionMembre {
 
         Optional<Membre> membreReturn = this.membreInterface.findById(membre.getIdM());
         if (!membreReturn.isPresent()) {
-            //TODO exception 
+            throw new InvalidParameterException("le membre fournis ne correspond à aucun membre present dans la base ");
         }
-        //Membre membreEnr = membreReturn.get();
-        //this.membreInterface.delete(membreEnr);
-        //membre.setIdM(idMembre);
         this.membreInterface.save(membre);
     }
 
     public void deleteMembre(Long idMembre) {
         Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
         if (!membreReturn.isPresent()) {
-            //TODO exception 
+            throw new InvalidParameterException("l'id fournis ne corrspond à aucun membre ");
         }
         Membre m = membreReturn.get();
         this.membreInterface.delete(m);
@@ -90,11 +91,12 @@ public class GestionMembre {
         Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
         Optional<Association> assoReturn = this.assoInterface.findById((long)1);
 
-        if (!membreReturn.isPresent() && !assoReturn.isPresent()) {
-            //TODO exception 
+        if (!membreReturn.isPresent()) {
+            throw new InvalidParameterException("l'id fournis ne corrspond à aucun membre ");//TODO exception 
         } else {
             Association asso = assoReturn.get();
-            //if (cotisation >= asso.getCotisationMin()) {
+            
+            if (cotisation >= asso.getCotisationMin()) {
 
                 Membre m = membreReturn.get();
                 m.setIbanM(iban);
@@ -105,14 +107,17 @@ public class GestionMembre {
                 this.assoInterface.save(asso);
 
                 this.membreInterface.save(m);
-            //}
+            }else{
+                throw new InvalidParameterException("le montant de la cotisation est insufisant : "+asso.getCotisationMin()+" minimum ");//TODO exception 
+            }
+            
         }
     }
 
     public void majCertifMedical(long idMembre) {
         Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
         if (!membreReturn.isPresent()) {
-            //TODO exception 
+            throw new InvalidParameterException("l'id fournis ne correspond à aucun membre present dans la base "); 
         }
         Membre m = membreReturn.get();
         m.setAnneeCertificat(new Date());
@@ -146,7 +151,7 @@ public class GestionMembre {
     public Membre connexion(String loginM, String mdpM) {
         Optional<Membre> membreReturn = this.membreInterface.findMembreByLoginMAndMdpM(loginM,mdpM);
         if (!membreReturn.isPresent()) {
-            return new Membre();
+            throw new InvalidParameterException("login mdp incorrect");
         }else{
             Membre m = membreReturn.get();
             return m;
