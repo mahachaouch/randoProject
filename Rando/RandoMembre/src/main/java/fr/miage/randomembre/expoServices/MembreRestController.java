@@ -30,10 +30,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * @author Maha
- */
 @RestController
 @RequestMapping("/api/randoMembre")
 public class MembreRestController {
@@ -53,13 +49,6 @@ public class MembreRestController {
         Long idMembre = Long.parseLong(id);
         return this.gestMembre.getMembre(idMembre);
     } 
-    
-    
-    @CrossOrigin
-    @GetMapping(params = "type")
-    public List<Membre> getMembresByType(@RequestParam(value="type") String type){
-        return this.gestMembre.findMembresByType(type);
-    }
     
     @CrossOrigin
     @PostMapping

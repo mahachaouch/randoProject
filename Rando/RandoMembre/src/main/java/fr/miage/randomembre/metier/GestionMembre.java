@@ -19,10 +19,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-/**
- *
- * @author Maha
- */
 @Controller
 public class GestionMembre {
 
@@ -32,10 +28,19 @@ public class GestionMembre {
     @Autowired
     private AssociationInterface assoInterface;
 
+    /**
+     * retourne la liste des membre enregistré dans le repo
+     * @return 
+     */
     public List<Membre> getMembres() {
         return (List<Membre>) membreInterface.findAll();
     }
 
+    /**
+     * retourne pour un id donné le membre contenu en repo correspondant, si il existe
+     * @param id
+     * @return 
+     */
     public Membre getMembre(Long id) {
         Optional<Membre> membreReturn = this.membreInterface.findById(id);
         if (!membreReturn.isPresent()) {
@@ -44,24 +49,13 @@ public class GestionMembre {
         return membreReturn.get();
     }
 
-    public List<Membre> findMembresByType(String type) {
-        Optional<Membre> membreReturn = null;
-        switch (type) {
-            case "TL":
-                membreReturn = this.membreInterface.findByIsTLIsTrue();
-                break;
-            case "President":
-                membreReturn = this.membreInterface.findByIsPresidentIsTrue();
-                break;
-            case "Secretaire":
-                membreReturn = this.membreInterface.findByIsSecretaireIsTrue();
-                break;
-            default:
-                throw new InvalidParameterException("le type fournis n'existe pas (TL,President,Secretaire");
-        }
-        return (List<Membre>) membreReturn.get();
-    }
-
+    /**
+     * creer et ajoute le membre en parametre au repo
+     * le login doit etre unique 
+     * les login et mdp ne peuvent etre vide
+     * @param membre
+     * @return 
+     */
     public Membre createMembre(Membre membre) {
         Optional<Membre> membreReturn = this.membreInterface.findByLoginM(membre.getLoginM());
         if (membreReturn.isPresent()) {
@@ -73,6 +67,11 @@ public class GestionMembre {
         return this.membreInterface.save(membre);
     }
 
+    /**
+     * met à jour le membre en repo
+     * le membre doit déjà etre présent dans le repo
+     * @param membre 
+     */
     public void updateMembre(Membre membre) {
 
         Optional<Membre> membreReturn = this.membreInterface.findById(membre.getIdM());
@@ -82,6 +81,11 @@ public class GestionMembre {
         this.membreInterface.save(membre);
     }
 
+    /**
+     * supprime du repo le membre d'id idMembre
+     * l'id fournis doit correspondre à un membre
+     * @param idMembre 
+     */
     public void deleteMembre(Long idMembre) {
         Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
         if (!membreReturn.isPresent()) {
@@ -91,12 +95,26 @@ public class GestionMembre {
         this.membreInterface.delete(m);
     }
 
+    /**
+     * payer la cotisation du membre idMembre via son iban et la cotisation payée
+     * l'iban doit etre different de vide
+     * l'idmembre doit correspondre à un membre
+     * la cotisation doit etre sup ou egal au min de l'asso
+     * @param idMembre
+     * @param iban
+     * @param cotisation 
+     */
     public void payerCotisation(long idMembre, String iban, Long cotisation) {
         Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
         Optional<Association> assoReturn = this.assoInterface.findById((long)1);
+        
+        if (iban.equals("")){
+            throw new InvalidParameterException("un iban doit etre renseigné");
+        }
+        
 
         if (!membreReturn.isPresent()) {
-            throw new InvalidParameterException("l'id fournis ne corrspond à aucun membre ");//TODO exception 
+            throw new InvalidParameterException("l'id fournis ne corrspond à aucun membre ");
         } else {
             Association asso = assoReturn.get();
             
@@ -118,6 +136,11 @@ public class GestionMembre {
         }
     }
 
+    /**
+     * maj la date de certif du membre d'id idMembre
+     * idMembre doit correspondre à un membre
+     * @param idMembre 
+     */
     public void majCertifMedical(long idMembre) {
         Optional<Membre> membreReturn = this.membreInterface.findById(idMembre);
         if (!membreReturn.isPresent()) {
@@ -127,7 +150,11 @@ public class GestionMembre {
         m.setAnneeCertificat(new Date());
         this.membreInterface.save(m);
     }
-
+    
+    /**
+     * retourne une chaine contenant les information necessaire au reporting
+     * @return 
+     */
     public String reporting() {
         List<Membre> listMembre = (List<Membre>) membreInterface.findAll();
         int nbMembre = 0;
@@ -152,6 +179,12 @@ public class GestionMembre {
         
     }
 
+    /**
+     * retourne, si il existe, le membre ayant les identifiants passé en parametre
+     * @param loginM
+     * @param mdpM
+     * @return 
+     */
     public Membre connexion(String loginM, String mdpM) {
         Optional<Membre> membreReturn = this.membreInterface.findMembreByLoginMAndMdpM(loginM,mdpM);
         if (!membreReturn.isPresent()) {

@@ -21,6 +21,10 @@ public class GestionAssociation {
     private AssociationInterface associationInterface;
 
     //retourne l'association stocké dans le repo
+    /**
+     * retourne l'association contenu dans le repo
+     * @return 
+     */
     public Association getAssociation() {
         List<Association> listAssos = (List<Association>) associationInterface.findAll();
         if (listAssos.size() != 0){
@@ -68,6 +72,10 @@ public class GestionAssociation {
         
     }
 
+    /**
+     * retourne une chaine contenant les information necessaire au reporting
+     * @return 
+     */
     public String reporting() {
         Optional<Association> assoReturn = this.associationInterface.findById((long) 1);
         if (!assoReturn.isPresent()) {
