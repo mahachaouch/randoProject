@@ -54,11 +54,6 @@ public class MembreRestController {
         return this.gestMembre.getMembre(idMembre);
     } 
     
-    @CrossOrigin
-    @RequestMapping(value = "/{memId}/get", method = RequestMethod.GET,produces =org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
-    public Membre getMemberById(@PathVariable(value = "memId") final String memId) {
-    	return this.gestMembre.getMembre(Long.parseLong(memId));
-    }
     
     @CrossOrigin
     @GetMapping(params = "type")

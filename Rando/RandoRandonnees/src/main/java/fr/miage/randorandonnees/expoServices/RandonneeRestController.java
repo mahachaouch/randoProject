@@ -7,6 +7,7 @@ import fr.miage.randorandonnees.entities.Randonnee;
 import fr.miage.randorandonnees.metier.GestionRandonnee;
 import java.io.IOException;
 import static java.lang.Long.parseLong;
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -16,9 +17,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +48,6 @@ public class RandonneeRestController {
     @GetMapping
     public String getRandos() {
         List<Randonnee> randos = this.gestRando.getAllRando();
-        // System.out.println(this.gestRando.convertDataToString( this.gestRando.getAllRando()));
         return this.gestRando.convertDataToString(randos);
     }
 
@@ -100,7 +104,7 @@ public class RandonneeRestController {
     //getRandoInscriNonCloture
     @CrossOrigin
     @PostMapping
-    public Randonnee creerRandonnee(@RequestBody Randonnee rando) {
+    public Randonnee creerRandonnee(@RequestBody Randonnee rando) throws ParseException {
         
         return this.gestRando.createRando(rando);
     }
@@ -140,14 +144,11 @@ public class RandonneeRestController {
     public String reporting(){
         return this.gestRando.reporting();
     }
-
-    /*  @GetMapping
-    public List<Randonnee> getRandoPassees() {
-        return (List<Randonnee>) this.gestRando.getRandoPassees();
+    
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<String> paramManquant(HttpServletRequest requete, NumberFormatException ex) {
+        return new ResponseEntity<>("paramètre(s) manquant(s)", HttpStatus.UNPROCESSABLE_ENTITY);
     }
     
-        @GetMapping
-    public List<Randonnee> getCouTotalRandos() {
-        return (List<Randonnee>) this.gestRando.getCouTotalRandos();
-    }*/
+   
 }

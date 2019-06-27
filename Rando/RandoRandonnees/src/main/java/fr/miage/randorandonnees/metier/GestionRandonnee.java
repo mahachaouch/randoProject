@@ -11,6 +11,9 @@ import fr.miage.randorandonnees.entities.Randonnee;
 import fr.miage.randorandonnees.repositories.RandonneeInterface;
 import java.io.IOException;
 import static java.lang.Long.parseLong;
+import java.security.InvalidParameterException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -55,17 +58,36 @@ public class GestionRandonnee {
         return randoReturn.get();
     }
 
-    public Randonnee createRando(Randonnee rando) {
+    /**
+     * Permet de créer une nouvelle randonnée
+     *
+     * @param rando
+     * @return
+     */
+    public Randonnee createRando(Randonnee rando) throws ParseException {
         //vérifications des données
 
-        //dates valides
-        Date today = new Date();
-        Boolean datesValides = rando.getDate1().equals(today) && rando.getDate2().equals(today) && rando.getDate3().equals(today);
+        //vérifier si les dates sont  valides
+        String pattern = "yyyy-MM-dd";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(new Date());
+        LocalDate today = LocalDate.parse(date);
 
+        LocalDate dateCreneau1 = LocalDate.parse(rando.getDate1());
+        LocalDate dateCreneau2 = LocalDate.parse(rando.getDate2());
+        LocalDate dateCreneau3 = LocalDate.parse(rando.getDate3());
+
+       
+
+        Boolean datesValides = (dateCreneau1.compareTo(today) > 0) && (dateCreneau2.compareTo(today) > 0) && (dateCreneau3.compareTo(today) > 0);
+        System.out.println(datesValides);
+        if (!datesValides) {
+            throw new InvalidParameterException("Date(s) crénaux doit être dans le futur");
+        }
         //organisateur apte : vérifier que la personne qui veut créer la rando est un organisateur + il a un niveau 1,5 ...
         Long idTL = rando.getIdTeamLeader();
         int niveauTL = 0;
-        int niveauRando = rando.getNiveauCible();
+        int distanceRando = Integer.parseInt(rando.getDistanceR());
         RestTemplate restTemplate = new RestTemplate();
         String fooResourceUrl = "http://localhost:8080/api/randoMembre/";
         ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + idTL, String.class);
@@ -74,15 +96,15 @@ public class GestionRandonnee {
         JsonNode root;
         try {
             root = mapper.readTree(response.getBody());
-            JsonNode niveauM = root.path("niveauM");
-            System.out.println(niveauM.asText());
+            JsonNode niveauM = root.path("niveauM");            
             niveauTL = Integer.parseInt(niveauM.asText());
         } catch (IOException ex) {
             Logger.getLogger(GestionRandonnee.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (niveauRando >= niveauTL) {
-            return null;
+        //vérif distance et niveau TL
+        if (distanceRando > (niveauTL * 1.5)) {
+            throw new InvalidParameterException("Votre niveau ne vous permet pas d organiser cette randonnee");
         }
 
         //verif cout
@@ -98,18 +120,16 @@ public class GestionRandonnee {
         try {
             root2 = mapper2.readTree(response2.getBody());
             JsonNode budgetAsso = root2.path("budgetAsso");
-            System.out.println(Float.parseFloat(budgetAsso.asText()));
             budgetAssociation = Float.parseFloat(budgetAsso.asText());
         } catch (IOException ex) {
             Logger.getLogger(GestionRandonnee.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         if (budgetAssociation < budgetRando) {
-            return null;
+            throw new InvalidParameterException("Le budget de l association n est pas en mesure de couvrir cette randonnée");
         }
 
         Randonnee initRando = new Randonnee(rando.getTitreR(), rando.getNiveauCible(), rando.getIdTeamLeader(), rando.getLieuR(), rando.getDistanceR(), rando.getCoutFixeR(), rando.getCoutVariableR(), rando.getDate1(), rando.getDate2(), rando.getDate3());
-        //System.out.println(initRando.toString());
         return this.randoInterface.save(initRando);
     }
 
@@ -285,7 +305,7 @@ public class GestionRandonnee {
                 randoInterface.save(rando);
 
             } else {
-                System.out.println("date not found");
+                throw new InvalidParameterException("Date créneau not found");
             }
         }
     }
@@ -296,7 +316,6 @@ public class GestionRandonnee {
      * @param idRando
      * @param idMembre
      */
-
     public void inscriptionRando(String idRando, long idMembre) {
         //chercher la rando
 
@@ -310,9 +329,16 @@ public class GestionRandonnee {
         //vérifier le code réponse : si il est égale à  200 OK
         Boolean memberExist = response.getStatusCode().equals(HttpStatus.OK);
 
-        //il faut chercher coté angular le membre via API => vérifier si il a le niveau requis
+        if (!memberExist) {
+            throw new InvalidParameterException("Le membre n existe pas");
+        }
+
         if (randoReturn.isPresent()) {
             Randonnee rando = randoReturn.get();
+
+            if (rando.isOverBooked()) {
+                throw new InvalidParameterException("Il ne reste plus de place dans cette randonnee");
+            }
             //vérifier que les votes sont cloturés et que l'inscription est encore ouverte et qu il reste des places
             if (!rando.getInscriCloture() && !rando.getSondageCloture() && !rando.isOverBooked() && memberExist) {
 
@@ -322,7 +348,7 @@ public class GestionRandonnee {
                 randoInterface.save(rando);
             }
         } else {
-            System.out.println("rando not found");
+            throw new InvalidParameterException("La rando que vous cherchez n existe pas");
         }
     }
 
@@ -335,6 +361,8 @@ public class GestionRandonnee {
      * @throws IOException
      */
     public List<Randonnee> getRandoInscriNonCloturePourUnMembre(Long idMembre) throws IOException {
+        //list to retur init
+        List<Randonnee> randosToReturn = new ArrayList<Randonnee>();
 
         //vérifier que le membre existe
         RestTemplate restTemplate = new RestTemplate();
@@ -343,31 +371,34 @@ public class GestionRandonnee {
 
         //vérifier le code réponse : si il est égale à  200 OK
         Boolean memberExist = response.getStatusCode().equals(HttpStatus.OK);
+        if (memberExist) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response.getBody());
+            JsonNode isApte = root.path("isApte");
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response.getBody());
-        JsonNode isApte = root.path("isApte");
+            //vérifier si le membre est apte avant de s inscrire
+            if (isApte.asBoolean()) {
 
-        List<Randonnee> randosToReturn = new ArrayList<Randonnee>();
+                List<Randonnee> randosInscisOuvertes = this.randoInterface.findByInscriClotureAndSondageCloture(false, true);
 
-        //vérifier si le membre est apte avant de s inscrire
-        if (isApte.asBoolean()) {
+                for (int i = 0; i < randosInscisOuvertes.size(); i++) {
+                    Randonnee rando = randosInscisOuvertes.get(i);
+                    List<Long> idInscrits = rando.getListInscris();
+                    //vérifier s il reste des places dispo pour la rando
 
-            List<Randonnee> randosInscisOuvertes = this.randoInterface.findByInscriClotureAndSondageCloture(false, true);
-
-            for (int i = 0; i < randosInscisOuvertes.size(); i++) {
-                Randonnee rando = randosInscisOuvertes.get(i);
-                List<Long> idInscrits = rando.getListInscris();
-                //vérifier s il reste des places dispo pour la rando
-
-                if (!rando.isOverBooked()) {
-                    //ajouter la rando à laquelle le membre ne s'es pas inscrit
-                    if (!idInscrits.contains(idMembre)) {
-                        //System.out.println("rando to return"+i);
-                        randosToReturn.add(randosInscisOuvertes.get(i));
+                    if (!rando.isOverBooked()) {
+                        //ajouter la rando à laquelle le membre ne s'es pas inscrit
+                        if (!idInscrits.contains(idMembre)) {
+                            //System.out.println("rando to return"+i);
+                            randosToReturn.add(randosInscisOuvertes.get(i));
+                        }
                     }
                 }
+            } else {
+                throw new InvalidParameterException("Nous somme déolés, vous n etes pas apte à vous inscrire");
             }
+        } else {
+            throw new InvalidParameterException("LE membre n existe pas");
         }
         return randosToReturn;
     }
@@ -429,12 +460,10 @@ public class GestionRandonnee {
             }
             //ajouter la rando à laquelle le membre n a pas voté
             if (!exist) {
-                //System.out.println("rando to return"+i);
                 randosToReturn.add(allRandoWithOpenVotes.get(i));
             }
 
         }
-        // System.out.println("final return" + randosToReturn.toString());
         return randosToReturn;
     }
 
@@ -456,5 +485,9 @@ public class GestionRandonnee {
             }
         }
         return "{\"totalCoutRando\" : \"" + totalcoutrando + "\", \"nbRandoPos\" : \"" + nbRandoPos + "\", \"encour\" : \"" + encour + "\"  }";
+    }
+
+    public LocalDate convertStringTODate(String dateCreneau) {
+        return LocalDate.parse(dateCreneau);
     }
 }
