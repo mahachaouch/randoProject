@@ -108,7 +108,6 @@ public class GestionRandonnee {
             return null;
         }
 
-        
         Randonnee initRando = new Randonnee(rando.getTitreR(), rando.getNiveauCible(), rando.getIdTeamLeader(), rando.getLieuR(), rando.getDistanceR(), rando.getCoutFixeR(), rando.getCoutVariableR(), rando.getDate1(), rando.getDate2(), rando.getDate3());
         //System.out.println(initRando.toString());
         return this.randoInterface.save(initRando);
@@ -182,7 +181,13 @@ public class GestionRandonnee {
                 idInscris.add(randoReturn.getIdTeamLeader());
             }
 
-            //màj le budget de l'association
+            //màj le budget de l'association : soustraire le cout total de la rando + coutFixe
+            Long coutTotal = randoReturn.getCoutFixeR() + randoReturn.getCoutVariableR() * idInscris.size();
+
+            RestTemplate restTemplate = new RestTemplate();
+            String fooResourceUrl = "http://localhost:8080/api/randoAsso/financerRando/";
+            ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + coutTotal, String.class);
+
             //màj de la rando
             randoInterface.save(randoReturn);
         }
@@ -245,10 +250,11 @@ public class GestionRandonnee {
 
     /**
      * Permet à un membre de voter à un créneau d'une randonnée
+     *
      * @param idRando
      * @param idMembre
      * @param dateChoisie
-     * @throws IOException 
+     * @throws IOException
      */
     public void voterCreneau(String idRando, long idMembre, String dateChoisie) throws IOException {
 
@@ -283,12 +289,14 @@ public class GestionRandonnee {
             }
         }
     }
-/**
- * Permet à un membre de s'inscrire à une rando
- * @param idRando
- * @param idMembre 
- */
-    
+
+    /**
+     * Permet à un membre de s'inscrire à une rando
+     *
+     * @param idRando
+     * @param idMembre
+     */
+
     public void inscriptionRando(String idRando, long idMembre) {
         //chercher la rando
 
@@ -318,12 +326,14 @@ public class GestionRandonnee {
         }
     }
 
-/**
- * Renvoie la list des randos aux quelles le membre ne s est pas inscri (inscription non cloturée)
- * @param idMembre
- * @return
- * @throws IOException 
- */    
+    /**
+     * Renvoie la list des randos aux quelles le membre ne s est pas inscri
+     * (inscription non cloturée)
+     *
+     * @param idMembre
+     * @return
+     * @throws IOException
+     */
     public List<Randonnee> getRandoInscriNonCloturePourUnMembre(Long idMembre) throws IOException {
 
         //vérifier que le membre existe
@@ -361,10 +371,12 @@ public class GestionRandonnee {
         }
         return randosToReturn;
     }
+
     /**
      * Transfomre le retour data mondo en un String
+     *
      * @param randos
-     * @return 
+     * @return
      */
     public String convertDataToString(List<Randonnee> randos) {
         String result = "[";

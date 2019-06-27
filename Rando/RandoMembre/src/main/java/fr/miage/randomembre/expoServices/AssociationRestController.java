@@ -7,6 +7,8 @@ package fr.miage.randomembre.expoServices;
 
 import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.metier.GestionAssociation;
+import java.io.IOException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,33 +26,33 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/randoAsso")
-public class AssociationRestController {   
-        
+public class AssociationRestController {
+
     @Autowired
     private GestionAssociation gestAsso;
-    
+
     @CrossOrigin
     @GetMapping
-    public Association  getBudgetAsso(){
+    public Association getBudgetAsso() {
         return this.gestAsso.getAssociation();
     }
-    
+
     @CrossOrigin
     @PostMapping
-    public Association createAssociation(@RequestBody Association association){
+    public Association createAssociation(@RequestBody Association association) {
         return this.gestAsso.createAssociation(association);
     }
-    
+
     @CrossOrigin
-    @GetMapping("/financerRando")
-    public void financerRando(@RequestParam("cout") String cout){
+    @GetMapping("/financerRando/{cout}")
+    public void financerRando(@PathVariable("cout") String cout) throws IOException {
         float coutR = Float.parseFloat(cout);
         this.gestAsso.financerRando(coutR);
     }
-    
+
     @CrossOrigin
     @GetMapping("/reporting")
-    public String reporting(){
+    public String reporting() {
         return this.gestAsso.reporting();
     }
 }
