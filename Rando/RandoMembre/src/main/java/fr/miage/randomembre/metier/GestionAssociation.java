@@ -50,6 +50,9 @@ public class GestionAssociation {
     }
      
      public void financerRando(float cout) {
+        if (cout < 0){
+                throw new InvalidParameterException("cout rando doit etre > 0 ");
+        }
          List<Association> listAssos = (List<Association>) associationInterface.findAll();
         if (listAssos.size() != 0){
             Association a = listAssos.get(0);
