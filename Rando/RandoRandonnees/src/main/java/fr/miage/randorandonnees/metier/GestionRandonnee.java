@@ -71,11 +71,11 @@ public class GestionRandonnee {
         String pattern = "yyyy-MM-dd";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date());
-        LocalDate today = LocalDate.parse(date);
-
-        LocalDate dateCreneau1 = LocalDate.parse(rando.getDate1());
-        LocalDate dateCreneau2 = LocalDate.parse(rando.getDate2());
-        LocalDate dateCreneau3 = LocalDate.parse(rando.getDate3());
+        LocalDate today = LocalDate.parse(date,DateTimeFormatter.ofPattern(pattern));
+/*
+        LocalDate dateCreneau1 = LocalDate.parse(rando.getDate1(),DateTimeFormatter.ofPattern(pattern));
+        LocalDate dateCreneau2 = LocalDate.parse(rando.getDate2(),DateTimeFormatter.ofPattern(pattern));
+        LocalDate dateCreneau3 = LocalDate.parse(rando.getDate3(),DateTimeFormatter.ofPattern(pattern));
 
        
 
@@ -84,6 +84,7 @@ public class GestionRandonnee {
         if (!datesValides) {
             throw new InvalidParameterException("Date(s) crénaux doit être dans le futur");
         }
+        */
         //organisateur apte : vérifier que la personne qui veut créer la rando est un organisateur + il a un niveau 1,5 ...
         Long idTL = rando.getIdTeamLeader();
         int niveauTL = 0;
@@ -159,7 +160,10 @@ public class GestionRandonnee {
             randoInterface.save(randoReturn);
         }
     }
-
+/**
+ * Permet de cloturer les votes d'une rando
+ * @param id 
+ */
     public void cloturerVotes(String id) {
         Randonnee randoReturn = this.randoInterface.findById(id).get();
         if (randoReturn != null) {
@@ -388,14 +392,13 @@ public class GestionRandonnee {
 
                     if (!rando.isOverBooked()) {
                         //ajouter la rando à laquelle le membre ne s'es pas inscrit
-                        if (!idInscrits.contains(idMembre)) {
-                            //System.out.println("rando to return"+i);
+                        if (!idInscrits.contains(idMembre)) {                            
                             randosToReturn.add(randosInscisOuvertes.get(i));
                         }
                     }
                 }
             } else {
-                throw new InvalidParameterException("Nous somme déolés, vous n etes pas apte à vous inscrire");
+                throw new InvalidParameterException("Nous somme désolés, vous n etes pas apte à vous inscrire");
             }
         } else {
             throw new InvalidParameterException("LE membre n existe pas");
@@ -487,7 +490,4 @@ public class GestionRandonnee {
         return "{\"totalCoutRando\" : \"" + totalcoutrando + "\", \"nbRandoPos\" : \"" + nbRandoPos + "\", \"encour\" : \"" + encour + "\"  }";
     }
 
-    public LocalDate convertStringTODate(String dateCreneau) {
-        return LocalDate.parse(dateCreneau);
-    }
 }

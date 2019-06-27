@@ -57,35 +57,57 @@ public class RandonneeRestController {
         List<Randonnee> randos = this.gestRando.getRandoVoteNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
-
+/**
+ * renvoie la liste des randos dont les votes sont pas cloturés et auxquelles le membre n a pas encore voté
+ * @param id
+ * @return 
+ */
     @CrossOrigin
     @GetMapping("/randoToVotes/{idMembre}")
     public String getRandosWithOpenVotes(@PathVariable("idMembre") String id) {
         List<Randonnee> randos = this.gestRando.getRandoVotesNonClotureNonVoteParMembre(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
     }
-
+/**
+ * renvoie toutes les randos dont l inscri n est pas cloturée
+ * @return 
+ */
     @CrossOrigin
     @GetMapping("/randoInscriNonCloture")
     public String getRandosInsciNonCloture() {
         List<Randonnee> randos = this.gestRando.getRandoInscriNonCloture();
         return this.gestRando.convertDataToString(randos);
     }
-
+/**
+ * renvoie toutes les randos dont l inscri n est pas cloturée et à la quelle le membre ne s est pas inscrit
+ * @param id
+ * @return
+ * @throws IOException 
+ */
     @CrossOrigin
     @GetMapping("/randoInscriNonCloture/{idMembre}")
     public String getRandosInsciNonClotureForAspecificMember(@PathVariable("idMembre") String id) throws IOException {
         List<Randonnee> randos = this.gestRando.getRandoInscriNonCloturePourUnMembre(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
     }
-
+/**
+ * renvoie toutes les randos dont les votes ne sont pas cloturées, organisées par le TL (id en param)
+ * @param id
+ * @return
+ * @throws IOException 
+ */
     @CrossOrigin
     @GetMapping("/randoVotesACloturer/{idTL}")
     public String getRandoAcloturerVotes(@PathVariable("idTL") String id) throws IOException {
         List<Randonnee> randos = this.gestRando.getRandoVotesNonClotureCréeParUnTL(Long.parseLong(id));
         return this.gestRando.convertDataToString(randos);
     }
-
+/**
+ * renvoie toutes les randos dont les inscriptions ne sont pas cloturées, organisées par le TL (id en param)
+ * @param id
+ * @return
+ * @throws IOException 
+ */
     @CrossOrigin
     @GetMapping("/randoInscisACloturer/{idTL}")
     public String getRandoAcloturerInscris(@PathVariable("idTL") String id) throws IOException {
@@ -96,25 +118,28 @@ public class RandonneeRestController {
     @CrossOrigin
     @GetMapping("/{randoId}")
     public String getRandonnee(@PathVariable("randoId") String id) {
-        //return this.gestRando.getRandoById(id).getNbPlaces();
-        System.out.println(this.gestRando.getRandoById(id).toString());
         return this.gestRando.getRandoById(id).toString();
     }
 
-    //getRandoInscriNonCloture
     @CrossOrigin
     @PostMapping
-    public Randonnee creerRandonnee(@RequestBody Randonnee rando) throws ParseException {
-        
+    public Randonnee creerRandonnee(@RequestBody Randonnee rando) throws ParseException {        
         return this.gestRando.createRando(rando);
     }
-
+/**
+ * met à jour une randoonée
+ * @param id
+ * @param rando 
+ */
     @CrossOrigin
     @PutMapping("/{randoId}")
     public void majRando(@PathVariable("randoId") String id, @RequestBody Randonnee rando) {
         this.gestRando.majRando(id, rando);
     }
-
+/**
+ * Cloture les votes de la rando dont l id est donnée en param
+ * @param id 
+ */
     @CrossOrigin
     @PatchMapping("/cloturerVotes/{randoId}")
     public void cloturerVotes(@PathVariable("randoId") String id) {
