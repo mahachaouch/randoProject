@@ -7,11 +7,14 @@ package fr.miage.randomembre.expoServices;
 
 import fr.miage.randomembre.entities.Association;
 import fr.miage.randomembre.metier.GestionAssociation;
+import java.security.InvalidParameterException;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,5 +55,10 @@ public class AssociationRestController {
     @GetMapping("/reporting")
     public String reporting(){
         return this.gestAsso.reporting();
+    }
+    
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<String> paramManquant(HttpServletRequest requete, NumberFormatException ex) {
+        return new ResponseEntity<>("paramètre(s) manquant(s)", HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
